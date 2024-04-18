@@ -1,4 +1,3 @@
-import { IPagination } from '../interface/pagination';
 import { FetchKit } from './fetchkit';
 
 const fetchKit = new FetchKit(
@@ -26,7 +25,9 @@ export async function getUsers({
     per_page,
   });
 
-  const response = await fetch('https://api.github.com/users?' + searchParams);
+  const response = await fetchKit.fetch(
+    'https://api.github.com/users?' + searchParams
+  );
 
   return await response.json();
 }
