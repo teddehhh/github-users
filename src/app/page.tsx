@@ -27,7 +27,7 @@ export default function Home() {
   useEffect(() => {
     async function fetchUsers() {
       const data = await getUsers({
-        since: pagination.page.toString(),
+        since: (pagination.page * pagination.pageSize).toString(),
         per_page: pagination.pageSize.toString(),
       });
 
