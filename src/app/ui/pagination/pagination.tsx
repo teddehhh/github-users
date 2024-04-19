@@ -15,7 +15,7 @@ interface PaginationTableProps {
   usersCount: number;
 }
 
-export function PaginationTable({
+export function TablePagination({
   setPagination,
   pagination,
   usersCount,

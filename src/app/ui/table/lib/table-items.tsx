@@ -5,7 +5,7 @@ import {
   TableCell,
   TableRow,
 } from '@/components/ui/table';
-import { TableHeaders } from './lib';
+import { TableHeaders } from '.';
 
 interface TableDataProps {
   headers: Array<{ title: string; field: string }>;
