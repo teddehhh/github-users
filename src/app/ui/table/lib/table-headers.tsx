@@ -5,13 +5,14 @@ interface TableHeaderProps {
     title: string;
     field: string;
   }[];
+  className?: string;
 }
 
-export function TableHeaders({ headers }: TableHeaderProps) {
+export function TableHeaders({ headers, className }: TableHeaderProps) {
   return (
-    <TableHeader className="sticky top-0 bg-[#f1f5f9]">
+    <TableHeader className={className}>
       <TableRow>
-        {headers.map((header) => (
+        {headers.map((header, index) => (
           <TableHead key={header.field}>{header.title}</TableHead>
         ))}
       </TableRow>

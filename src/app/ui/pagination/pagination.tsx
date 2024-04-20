@@ -13,15 +13,17 @@ interface PaginationTableProps {
   setPagination: Dispatch<SetStateAction<IPagination>>;
   pagination: IPagination;
   usersCount: number;
+  className?: string;
 }
 
 export function TablePagination({
   setPagination,
   pagination,
   usersCount,
+  className,
 }: PaginationTableProps) {
   return (
-    <Pagination>
+    <Pagination className={className}>
       <PaginationContent>
         <PaginationItem>
           <PaginationPrevious
