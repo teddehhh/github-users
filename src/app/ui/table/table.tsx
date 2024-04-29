@@ -1,35 +1,42 @@
 'use client';
-import { getUsers } from '@/app/api/api';
 import { IPagination } from '@/app/interface/pagination';
-import { IUser } from '@/app/interface/user';
-import { useState, useEffect, useRef, useMemo } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import { TablePagination } from '../pagination';
 import { TableItems } from './lib/table-items';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { IFilter, selectFilter } from '@/app/slice';
 
 const headers = [
   { title: 'Login', field: 'login' },
   { title: 'Type', field: 'type' },
 ];
 
-export function Table({ totalCount }: { totalCount: number }) {
-  const [pagination, setPagination] = useState<IPagination>({
-    page: 0,
-    pageSize: 10,
-  });
+export function Table({
+  totalCount,
+  fetchUsers,
+  users,
+  pagination,
+  setPagination,
+}: {
+  totalCount: number;
+  fetchUsers: (pagination: IPagination, filter: IFilter) => Promise<void>;
+  users: any[];
+  pagination: IPagination;
+  setPagination: Dispatch<SetStateAction<IPagination>>;
+}) {
+  const { filter } = useAppSelector(selectFilter);
 
-  const [usersCount] = useState<number>(totalCount);
-  const [users, setUsers] = useState<IUser[]>([]);
 
   useEffect(() => {
-    async function fetchUsers() {
-      const data = await getUsers({
-        since: (pagination.page * pagination.pageSize).toString(),
-        per_page: pagination.pageSize.toString(),
-      });
-
-      setUsers(data);
-    }
-    fetchUsers();
+    fetchUsers(pagination, filter);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination]);
 
   return (
@@ -37,7 +44,7 @@ export function Table({ totalCount }: { totalCount: number }) {
       <TableItems headers={headers} keyField="id" items={users} />
       <TablePagination
         setPagination={setPagination}
-        usersCount={usersCount}
+        usersCount={totalCount}
         pagination={pagination}
         className="mb-2 table-pagination"
       />

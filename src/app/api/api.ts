@@ -1,3 +1,4 @@
+import { IFilter } from '../slice';
 import { FetchKit } from './fetchkit';
 
 const fetchKit = new FetchKit(
@@ -16,17 +17,23 @@ export async function getUsersCount() {
 export async function getUsers({
   since,
   per_page,
+  filter: { login, userType },
 }: {
   since: string;
   per_page: string;
+  filter: IFilter;
 }) {
   const searchParams = new URLSearchParams({
     since,
     per_page,
+    q: [
+      login ? `${login} in:login` : '',
+      userType.length ? `type:${userType}` : '',
+    ].join(' '),
   });
 
   const response = await fetchKit.fetch(
-    'https://api.github.com/users?' + searchParams
+    'https://api.github.com/search/users?' + searchParams
   );
 
   return await response.json();
