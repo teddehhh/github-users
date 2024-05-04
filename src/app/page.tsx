@@ -1,43 +1,22 @@
 'use client';
-import { getUsers, getUsersCount } from './api/api';
-import { Filter } from './ui/filter';
-import { Table } from './ui/table';
-import StoreProvider from './storeProvider';
-import { useEffect, useState } from 'react';
-import { IUser } from './interface/user';
-import { IPagination } from './interface/pagination';
-import { useAppSelector, useAppDispatch } from './hooks';
-import { IFilter, selectFilter } from './slice';
+import { signIn, signOut, useSession } from 'next-auth/react';
+// import { auth } from './auth';
 
 export default function Home() {
-  const [users, setUsers] = useState<IUser[]>([]);
-  const [pagination, setPagination] = useState<IPagination>({
-    page: 0,
-    pageSize: 10,
-  });
-
-  async function fetchUsers(pagination: IPagination, filter: IFilter) {
-    const data = await getUsers({
-      since: (pagination.page * pagination.pageSize).toString(),
-      per_page: pagination.pageSize.toString(),
-      filter,
-    });
-
-    setUsers(data.items);
-  }
+  const session = useSession();
 
   return (
-    <StoreProvider>
-      <div className="flex flex-row justify-between h-full">
-        <Filter pagination={pagination} fetchUsers={fetchUsers} />
-        <Table
-          pagination={pagination}
-          setPagination={setPagination}
-          totalCount={100}
-          fetchUsers={fetchUsers}
-          users={users}
-        />
-      </div>
-    </StoreProvider>
+    <>
+      {session && <div>{JSON.stringify(session)}</div>}
+      {
+        <button
+          onClick={() =>
+            session.status === 'authenticated' ? signOut() : signIn('github')
+          }
+        >
+          {`Sign ${session.status === 'authenticated' ? 'out' : 'in'}`}
+        </button>
+      }
+    </>
   );
 }
