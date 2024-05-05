@@ -23,4 +23,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return { ...session, token: token.accessToken };
     },
   },
+  pages: {
+    signIn: '/signin',
+  },
 });

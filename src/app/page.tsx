@@ -1,22 +1,12 @@
-'use client';
-import { signIn, signOut, useSession } from 'next-auth/react';
-// import { auth } from './auth';
+import { redirect } from 'next/navigation';
+import { auth } from './auth';
 
-export default function Home() {
-  const session = useSession();
+export default async function Home() {
+  const session = await auth();
 
-  return (
-    <>
-      {session && <div>{JSON.stringify(session)}</div>}
-      {
-        <button
-          onClick={() =>
-            session.status === 'authenticated' ? signOut() : signIn('github')
-          }
-        >
-          {`Sign ${session.status === 'authenticated' ? 'out' : 'in'}`}
-        </button>
-      }
-    </>
-  );
+  if (!session) {
+    redirect('signin');
+  }
+
+  return <>HomeTable Component</>;
 }
