@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { Session } from 'next-auth';
 import GitHubProvider from 'next-auth/providers/github';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -16,11 +16,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       return token;
     },
-    redirect: async ({ url, baseUrl }) => {
+    redirect: async ({ baseUrl }) => {
       return baseUrl;
     },
-    session: async ({ session, token, user }) => {
-      return { ...session, token: token.accessToken };
+    session: async ({ session, token }) => {
+      return { ...session, accessToken: token.accessToken };
     },
   },
   pages: {

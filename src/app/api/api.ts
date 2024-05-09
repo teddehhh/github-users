@@ -1,4 +1,4 @@
-import { IFilter } from '../slice';
+import { IFilter } from '../slices/filter';
 import { FetchKit } from './fetchkit';
 
 const fetchKit = new FetchKit(

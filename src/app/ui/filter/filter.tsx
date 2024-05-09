@@ -1,7 +1,7 @@
 'use client';
-import { useAppDispatch, useAppSelector, useAppStore } from '@/app/hooks';
+import { useAppDispatch, useAppSelector, useAppStore } from '@/app/store/hooks';
 import { IPagination } from '@/app/interface/pagination';
-import { IFilter, change, selectFilter } from '@/app/slice';
+import { IFilter, change, selectFilter } from '@/app/slices/filter';
 import {
   Accordion,
   AccordionContent,
@@ -11,8 +11,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 
 export function Filter({
   fetchUsers,

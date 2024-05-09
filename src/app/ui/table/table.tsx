@@ -10,8 +10,8 @@ import {
 } from 'react';
 import { TablePagination } from '../pagination';
 import { TableItems } from './lib/table-items';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { IFilter, selectFilter } from '@/app/slice';
+import { useAppDispatch, useAppSelector } from '@/app/store/hooks';
+import { IFilter, selectFilter } from '@/app/slices/filter';
 
 const headers = [
   { title: 'Login', field: 'login' },
@@ -32,7 +32,6 @@ export function Table({
   setPagination: Dispatch<SetStateAction<IPagination>>;
 }) {
   const { filter } = useAppSelector(selectFilter);
-
 
   useEffect(() => {
     fetchUsers(pagination, filter);

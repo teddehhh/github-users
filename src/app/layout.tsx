@@ -2,9 +2,11 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
-import { ClientProvider } from './providers';
-import { auth } from './auth';
+import { auth } from './auth/auth';
+import SessionProvider from './auth/session-provider';
+import StoreProvider from './store/storeProvider';
 
+/** fonts */
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -17,22 +19,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  /** get session */
   const session = await auth();
 
   return (
     <html lang="en" className="h-full">
-      <ClientProvider session={session}>
-        <body
-          className={cn(
-            'relative h-full font-sans antialiased',
-            inter.className
-          )}
-        >
-          <main className="relative h-full flex flex-col min-h-screen">
-            {children}
-          </main>
-        </body>
-      </ClientProvider>
+      <body
+        className={cn('relative h-full font-sans antialiased', inter.className)}
+      >
+        <main className="relative h-full flex flex-col min-h-screen">
+          <SessionProvider session={session}>
+            <StoreProvider>{children}</StoreProvider>
+          </SessionProvider>
+        </main>
+      </body>
     </html>
   );
 }
