@@ -2,9 +2,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { cn } from '@/lib/utils';
-import { auth } from './auth/auth';
-import SessionProvider from './auth/session-provider';
-import StoreProvider from './store/storeProvider';
+import { auth } from './api/auth/auth';
+import SessionProvider from './api/auth/session-provider';
 
 /** fonts */
 const inter = Inter({ subsets: ['latin'] });
@@ -23,14 +22,15 @@ export default async function RootLayout({
   const session = await auth();
 
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full w-full">
       <body
-        className={cn('relative h-full font-sans antialiased', inter.className)}
+        className={cn(
+          'relative h-full w-full font-sans antialiased',
+          inter.className
+        )}
       >
-        <main className="relative h-full flex flex-col min-h-screen">
-          <SessionProvider session={session}>
-            <StoreProvider>{children}</StoreProvider>
-          </SessionProvider>
+        <main className="relative h-full w-full flex flex-col min-h-screen">
+          <SessionProvider session={session}>{children}</SessionProvider>
         </main>
       </body>
     </html>

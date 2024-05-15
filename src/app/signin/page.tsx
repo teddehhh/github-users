@@ -1,8 +1,8 @@
-import { signIn } from '@/app/auth/auth';
 import Image from 'next/image';
 import { outfit } from '@/app/ui/fonts';
 import { Button } from '@/components/ui/button';
 import { FunctionComponent } from 'react';
+import { signIn } from '@/app/api/auth/auth';
 
 interface SignInPageProps {}
 

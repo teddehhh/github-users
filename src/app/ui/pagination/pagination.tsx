@@ -6,7 +6,7 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { cn } from '@/lib/utils';
-import { IPagination } from '@/app/interface/pagination';
+import { IPagination } from '@/app/lib/interface/pagination';
 import { Dispatch, SetStateAction } from 'react';
 
 interface PaginationTableProps {
