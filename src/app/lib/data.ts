@@ -1,31 +1,25 @@
+import { Octokit } from 'octokit';
 import { auth } from '../api/auth/auth';
-import { octokit } from './octokit';
 
-export async function fetchFilteredUsers(login: string, type?: string) {
+export async function fetchFilteredUsers(
+  page: number,
+  filter: {
+    login: string;
+    lang: string;
+  }
+) {
+  const { login, lang } = filter;
   const session = await auth();
+  const octokit = new Octokit({ auth: session?.accessToken });
 
-  const search = login + ' in:login';
-
-  const types = type ? 'type:' + type : '';
+  const typeSearch = `type:user`;
+  const loginSearch = login ? login + ' in:login' : '';
+  const langSearch = lang ? 'language:' + lang : '';
 
   return await octokit
     .request('GET /search/users', {
-      headers: {
-        authorization: session?.accessToken,
-      },
-      q: [search, types].join(' '),
-    })
-    .then(({ data }) => data.items);
-}
-
-export async function fetchUsers() {
-  const session = await auth();
-
-  return await octokit
-    .request('GET /users', {
-      headers: {
-        authorization: session?.accessToken,
-      },
+      q: [typeSearch, langSearch, loginSearch].join(' '),
+      page,
     })
     .then(({ data }) => data);
 }

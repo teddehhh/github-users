@@ -6,35 +6,63 @@ import {
   TableHead,
   TableHeader,
 } from '@/components/ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
 import { FunctionComponent } from 'react';
-import { fetchFilteredUsers, fetchUsers } from '../lib/data';
 import clsx from 'clsx';
+import Image from 'next/image';
 
 interface MyTableProps {
-  login: string;
-  type: string;
+  items: any[];
   className?: string;
 }
 
 const MyTable: FunctionComponent<MyTableProps> = async (props) => {
-  const { login, type, className } = props;
+  const { items, className } = props;
 
   const headers = [
-    { title: 'Login', field: 'login' },
-    { title: 'Type', field: 'type' },
+    { title: '', field: 'avatar_url', type: 'img' },
+    { title: 'Логин', field: 'login', type: 'text' },
+    { title: 'Счет', field: 'score', type: 'text' },
+    { title: 'Админ.', field: 'site_admin', type: 'boolean' },
   ];
 
-  function fetchItems(login: string, type: string) {
-    if (login || type) {
-      return fetchFilteredUsers(login, type);
-    }
-
-    return fetchUsers();
-  }
-
-  const items: Array<any> = await fetchItems(login, type);
   const keyField = 'login';
+
+  const getFieldValue = (item: any, field: string, type: string) => {
+    switch (type) {
+      case 'text':
+        return item[field];
+      case 'img':
+        return (
+          <Image
+            className="rounded-full"
+            src={item[field]}
+            alt={field}
+            width={28}
+            height={28}
+          />
+        );
+      case 'boolean':
+        return Boolean(item[field]) ? 'True' : 'False';
+      default:
+        break;
+    }
+  };
+
+  if (!items.length) {
+    return (
+      <div className="h-full flex flex-row justify-center items-center gap-4">
+        <Image
+          src={'/github-mark.svg'}
+          alt="github-logo"
+          width={100}
+          height={100}
+        />
+        <div>
+          <label>Пользователи не нашлись {':('}</label>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={clsx('overflow-y-auto h-full border-2', className)}>
@@ -47,28 +75,17 @@ const MyTable: FunctionComponent<MyTableProps> = async (props) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {items.length ? (
-            items.map((item) => {
-              return (
-                <TableRow key={item[keyField]}>
-                  {headers.map((header) => (
-                    <TableCell key={`${item[keyField]}_${header.field}`}>
-                      {item[header.field]}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              );
-            })
-          ) : (
-            <TableRow>
-              <TableCell>
-                <Skeleton className="w-4/5 h-[10px]" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="w-4/5 h-[10px]" />
-              </TableCell>
-            </TableRow>
-          )}
+          {items.map((item) => {
+            return (
+              <TableRow key={item[keyField]}>
+                {headers.map((header) => (
+                  <TableCell key={`${item[keyField]}_${header.field}`}>
+                    {getFieldValue(item, header.field, header.type)}
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>

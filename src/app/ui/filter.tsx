@@ -6,11 +6,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { Label } from '@radix-ui/react-label';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { FunctionComponent } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface FilterProps {
   children: React.ReactNode;
@@ -27,6 +28,8 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
   const searchLogin = useDebouncedCallback((login: string) => {
     const params = new URLSearchParams(searchParams);
 
+    params.set('page', '1');
+
     if (login) {
       params.set('login', login);
     } else {
@@ -36,27 +39,18 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
     replace(`${pathname}?${params.toString()}`);
   }, 300);
 
-  function searchType(type: string, checked: boolean) {
+  const searchLang = (lang: string) => {
     const params = new URLSearchParams(searchParams);
+    params.set('page', '1');
 
-    const typeParam = params.get('type');
-
-    if (checked) {
-      if (!typeParam) {
-        params.set('type', type);
-      } else {
-        params.delete('type');
-      }
+    if (lang !== 'all') {
+      params.set('lang', lang);
     } else {
-      if (typeParam) {
-        params.delete('type');
-      } else {
-        params.set('type', type === 'org' ? 'user' : 'org');
-      }
+      params.delete('lang');
     }
 
     replace(`${pathname}?${params.toString()}`);
-  }
+  };
 
   return (
     <div className="flex flex-col justify-between w-1/4 border-2 px-2 py-1 text-sm overflow-y-auto">
@@ -67,40 +61,51 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
           className="w-full"
         >
           <AccordionItem value="item-1">
-            <AccordionTrigger>Login</AccordionTrigger>
+            <AccordionTrigger>Логин</AccordionTrigger>
             <AccordionContent>
               <Input onChange={(e) => searchLogin(e.target.value)} />
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
-            <AccordionTrigger>User Type</AccordionTrigger>
+            <AccordionTrigger>Языки</AccordionTrigger>
             <AccordionContent>
-              <div className="flex flex-wrap gap-3">
+              <RadioGroup
+                defaultValue="all"
+                onValueChange={(lang) => searchLang(lang)}
+              >
                 <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="terms"
-                    onCheckedChange={(e) => searchType('user', Boolean(e))}
-                  />
-                  <label
-                    htmlFor="terms"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    User
-                  </label>
+                  <RadioGroupItem value="all" id="r1" />
+                  <Label htmlFor="r1">All</Label>
                 </div>
-                <div className="flex items-center space-x-2 ">
-                  <Checkbox
-                    id="terms"
-                    onCheckedChange={(e) => searchType('org', Boolean(e))}
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value="html"
+                    className="bg-orange-500"
+                    id="r2"
                   />
-                  <label
-                    htmlFor="terms"
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Organization
-                  </label>
+                  <Label htmlFor="r2">HTML</Label>
                 </div>
-              </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value="css"
+                    className="bg-purple-900"
+                    id="r3"
+                  />
+                  <Label htmlFor="r3">CSS</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value="javascript"
+                    className="bg-yellow-300"
+                    id="r3"
+                  />
+                  <Label htmlFor="r3">JavaScript</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="c++" className="bg-pink-400" id="r3" />
+                  <Label htmlFor="r3">C++</Label>
+                </div>
+              </RadioGroup>
             </AccordionContent>
           </AccordionItem>
         </Accordion>

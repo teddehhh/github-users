@@ -31,7 +31,7 @@ const SignOutButton: FunctionComponent<SignOutButtonProps> = () => {
           await signOut();
         }}
       >
-        Sign Out
+        Выход
       </Button>
     );
   }
@@ -45,7 +45,7 @@ const SignOutButton: FunctionComponent<SignOutButtonProps> = () => {
   return (
     <Button disabled>
       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-      Please wait
+      Пожалуйста, подождите
     </Button>
   );
 };
