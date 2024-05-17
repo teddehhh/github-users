@@ -8,98 +8,52 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { FunctionComponent } from 'react';
+import MyTableHeader from './my-table-header';
 
 interface MyTableProps {}
 
 const MyTableSkeleton: FunctionComponent<MyTableProps> = async (props) => {
-  const headers = [
-    { title: '', field: 'avatar_url' },
-    { title: 'Логин', field: 'login' },
-    { title: 'Счет', field: 'score' },
-    { title: 'Админ.', field: 'site_admin' },
+  const headers: {
+    title: string;
+    field: string;
+    type: 'img' | 'text' | 'boolean';
+    align?: 'left' | 'center' | 'right' | 'justify' | 'char';
+    className?: string;
+    sort?: boolean;
+  }[] = [
+    {
+      title: '',
+      field: 'avatar_url',
+      type: 'img',
+      align: 'center',
+      className: 'w-[100px]',
+    },
+    { title: 'Имя', field: 'login', type: 'text' },
+    { title: 'Подписчики', field: 'followers', type: 'text', sort: true },
+    { title: 'Репозитории', field: 'repositories', type: 'text', sort: true },
   ];
 
   return (
-    <div className={'overflow-y-auto h-full border-2'}>
+    <div className={'overflow-y-auto h-full'}>
       <Table>
-        <TableHeader className="sticky top-0 bg-[#f1f5f9]">
-          <TableRow>
-            {headers.map((header) => (
-              <TableHead key={header.field}>{header.title}</TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
+        <MyTableHeader headers={headers} />
         <TableBody>
-          <TableRow>
-            <TableCell>
-              <Skeleton className="w-[28px] h-[28px] rounded-full" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <Skeleton className="w-[28px] h-[28px] rounded-full" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <Skeleton className="w-[28px] h-[28px] rounded-full" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <Skeleton className="w-[28px] h-[28px] rounded-full" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <Skeleton className="w-[28px] h-[28px] rounded-full" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-            <TableCell>
-              <Skeleton className="w-4/5 h-[10px]" />
-            </TableCell>
-          </TableRow>
+          {Array.from(Array(10).keys()).map((item) => (
+            <TableRow key={item}>
+              <TableCell align="center">
+                <Skeleton className="w-[28px] h-[28px] bg-[#9b9b9b] rounded-full" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="w-4/5 h-[10px] bg-[#9b9b9b]" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="w-4/5 h-[10px] bg-[#9b9b9b]" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="w-4/5 h-[10px] bg-[#9b9b9b]" />
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>

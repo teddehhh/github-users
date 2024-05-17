@@ -14,7 +14,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 
 interface FilterProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const Filter: FunctionComponent<FilterProps> = (props) => {
@@ -53,15 +53,15 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
   };
 
   return (
-    <div className="flex flex-col justify-between w-1/4 border-2 px-2 py-1 text-sm overflow-y-auto">
-      <div>
+    <div className="flex flex-col h-full w-full justify-between mt-4 text-sm gap-2">
+      <div className="overflow-y-auto">
         <Accordion
           defaultValue={['item-1', 'item-2']}
           type="multiple"
           className="w-full"
         >
           <AccordionItem value="item-1">
-            <AccordionTrigger>Логин</AccordionTrigger>
+            <AccordionTrigger>Имя</AccordionTrigger>
             <AccordionContent>
               <Input onChange={(e) => searchLogin(e.target.value)} />
             </AccordionContent>

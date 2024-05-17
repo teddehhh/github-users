@@ -1,14 +1,8 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  TableHead,
-  TableHeader,
-} from '@/components/ui/table';
-import { FunctionComponent } from 'react';
+import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import clsx from 'clsx';
 import Image from 'next/image';
+import { FunctionComponent } from 'react';
+import MyTableHeader from './my-table-header';
 
 interface MyTableProps {
   items: any[];
@@ -18,11 +12,24 @@ interface MyTableProps {
 const MyTable: FunctionComponent<MyTableProps> = async (props) => {
   const { items, className } = props;
 
-  const headers = [
-    { title: '', field: 'avatar_url', type: 'img' },
-    { title: 'Логин', field: 'login', type: 'text' },
-    { title: 'Счет', field: 'score', type: 'text' },
-    { title: 'Админ.', field: 'site_admin', type: 'boolean' },
+  const headers: {
+    title: string;
+    field: string;
+    type: 'img' | 'text' | 'boolean';
+    align?: 'left' | 'center' | 'right' | 'justify' | 'char';
+    className?: string;
+    sort?: boolean;
+  }[] = [
+    {
+      title: '',
+      field: 'avatar_url',
+      type: 'img',
+      align: 'center',
+      className: 'w-[100px]',
+    },
+    { title: 'Имя', field: 'login', type: 'text' },
+    { title: 'Подписчики', field: 'followers', type: 'text', sort: true },
+    { title: 'Репозитории', field: 'repositories', type: 'text', sort: true },
   ];
 
   const keyField = 'login';
@@ -65,21 +72,18 @@ const MyTable: FunctionComponent<MyTableProps> = async (props) => {
   }
 
   return (
-    <div className={clsx('overflow-y-auto h-full border-2', className)}>
+    <div className={clsx('overflow-y-auto h-full', className)}>
       <Table>
-        <TableHeader className="sticky top-0 bg-[#f1f5f9]">
-          <TableRow>
-            {headers.map((header) => (
-              <TableHead key={header.field}>{header.title}</TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
+        <MyTableHeader headers={headers} />
         <TableBody>
           {items.map((item) => {
             return (
               <TableRow key={item[keyField]}>
                 {headers.map((header) => (
-                  <TableCell key={`${item[keyField]}_${header.field}`}>
+                  <TableCell
+                    align={header?.align}
+                    key={`${item[keyField]}_${header.field}`}
+                  >
                     {getFieldValue(item, header.field, header.type)}
                   </TableCell>
                 ))}

@@ -10,14 +10,15 @@ import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 
 interface MyPaginationProps {
   totalCount: number;
+  children?: React.ReactNode;
 }
 
 const MyPagination: FunctionComponent<MyPaginationProps> = (props) => {
-  const { totalCount } = props;
+  const { children, totalCount } = props;
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -27,11 +28,13 @@ const MyPagination: FunctionComponent<MyPaginationProps> = (props) => {
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
     params.set('page', pageNumber.toString());
+
     return `${pathname}?${params.toString()}`;
   };
 
   return (
-    <div className="border-2 p-1">
+    <div className="relative flex flex-row justify-start items-center p-1">
+      {children}
       <Pagination>
         <PaginationContent>
           <PaginationItem>

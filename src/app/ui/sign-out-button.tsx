@@ -1,8 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Label } from '@radix-ui/react-label';
-import { Loader2 } from 'lucide-react';
+import { CloudOff, Loader2, LogOut } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { FunctionComponent, useEffect, useState } from 'react';
 
@@ -25,27 +24,32 @@ const SignOutButton: FunctionComponent<SignOutButtonProps> = () => {
   if (!isClicked && status === 'authenticated') {
     return (
       <Button
-        variant="destructive"
+        className="w-full"
+        variant={'ghost'}
         onClick={async () => {
           setIsClicked(true);
           await signOut();
         }}
       >
-        Выход
+        <div className="flex w-full justify-evenly">
+          <LogOut />
+          Выход
+        </div>
       </Button>
     );
   }
 
   if (status === 'unauthenticated') {
     return (
-      <Label className="text-center font-medium">{'Unauthenticated'}</Label>
+      <Button className="w-full" disabled variant={'ghost'}>
+        <CloudOff />
+      </Button>
     );
   }
 
   return (
-    <Button disabled>
+    <Button disabled variant={'ghost'}>
       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-      Пожалуйста, подождите
     </Button>
   );
 };

@@ -6,20 +6,67 @@ export async function fetchFilteredUsers(
   filter: {
     login: string;
     lang: string;
+  },
+  sort: {
+    field: string;
+    order: string;
   }
 ) {
   const { login, lang } = filter;
+  const { field, order } = sort;
   const session = await auth();
-  const octokit = new Octokit({ auth: session?.accessToken });
 
   const typeSearch = `type:user`;
   const loginSearch = login ? login + ' in:login' : '';
   const langSearch = lang ? 'language:' + lang : '';
 
-  return await octokit
-    .request('GET /search/users', {
-      q: [typeSearch, langSearch, loginSearch].join(' '),
-      page,
-    })
-    .then(({ data }) => data);
+  const q = [typeSearch, loginSearch, langSearch]
+    .filter((item) => item)
+    .join(' ');
+
+  const searchParams = new URLSearchParams({
+    q,
+    p: String(page),
+    per_page: '3',
+  });
+
+  if (field) {
+    searchParams.append('s', field);
+  }
+
+  if (order) {
+    searchParams.append('o', order);
+  }
+
+  const data = await fetch(
+    'https://api.github.com/search/users?' + searchParams,
+    {
+      headers: [['Authorization', session?.accessToken ?? '']],
+    }
+  ).then(async (res) => {
+    return res.json() as Promise<{
+      total_count: number;
+      items: { login: string; avatar_url: string }[];
+    }>;
+  });
+
+  return data;
+}
+
+export async function fetchUser(username: string) {
+  const session = await auth();
+
+  const data = await fetch(`https://api.github.com/users/${username}`, {
+    headers: [['Authorization', session?.accessToken ?? '']],
+  }).then(
+    (res) =>
+      res.json() as Promise<{
+        login: string;
+        avatar_url: string;
+        public_repos: string;
+        followers: string;
+      }>
+  );
+
+  return data;
 }
