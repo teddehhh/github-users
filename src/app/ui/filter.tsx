@@ -7,11 +7,12 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Input } from '@/components/ui/input';
-import { Label } from '@radix-ui/react-label';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { FILTER_ITEMS, FILTER_LABEL, IFilterItem } from '../lib/const/filter';
 
 interface FilterProps {
   children?: React.ReactNode;
@@ -25,90 +26,118 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const searchLogin = useDebouncedCallback((login: string) => {
-    const params = new URLSearchParams(searchParams);
+  /** filter items handlers */
+  const onChangeHandlers = [
+    {
+      key: 'name',
+      onChange: useDebouncedCallback((login: string) => {
+        const params = new URLSearchParams(searchParams);
 
-    params.set('page', '1');
+        params.set('page', '1');
 
-    if (login) {
-      params.set('login', login);
-    } else {
-      params.delete('login');
-    }
+        if (login) {
+          params.set('login', login);
+        } else {
+          params.delete('login');
+        }
 
-    replace(`${pathname}?${params.toString()}`);
-  }, 300);
+        replace(`${pathname}?${params.toString()}`);
+      }, 300),
+    },
+    {
+      key: 'lang',
+      onChange: (lang: string) => {
+        const params = new URLSearchParams(searchParams);
+        params.set('page', '1');
 
-  const searchLang = (lang: string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', '1');
+        if (lang !== 'all') {
+          params.set('lang', lang);
+        } else {
+          params.delete('lang');
+        }
 
-    if (lang !== 'all') {
-      params.set('lang', lang);
-    } else {
-      params.delete('lang');
-    }
+        replace(`${pathname}?${params.toString()}`);
+      },
+    },
+  ];
 
-    replace(`${pathname}?${params.toString()}`);
-  };
+  const accorditionValues = Array.from(Array(FILTER_ITEMS.length).keys()).map(
+    (key) => `item-${key}`
+  );
 
   return (
     <div className="flex flex-col h-full w-full justify-between mt-4 text-sm gap-2">
-      <div className="overflow-y-auto">
-        <Accordion
-          defaultValue={['item-1', 'item-2']}
-          type="multiple"
-          className="w-full"
-        >
-          <AccordionItem value="item-1">
-            <AccordionTrigger>Имя</AccordionTrigger>
-            <AccordionContent>
-              <Input onChange={(e) => searchLogin(e.target.value)} />
-            </AccordionContent>
-          </AccordionItem>
-          <AccordionItem value="item-2">
-            <AccordionTrigger>Языки</AccordionTrigger>
-            <AccordionContent>
-              <RadioGroup
-                defaultValue="all"
-                onValueChange={(lang) => searchLang(lang)}
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="all" id="r1" />
-                  <Label htmlFor="r1">All</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    value="html"
-                    className="bg-orange-500"
-                    id="r2"
-                  />
-                  <Label htmlFor="r2">HTML</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    value="css"
-                    className="bg-purple-900"
-                    id="r3"
-                  />
-                  <Label htmlFor="r3">CSS</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    value="javascript"
-                    className="bg-yellow-300"
-                    id="r3"
-                  />
-                  <Label htmlFor="r3">JavaScript</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="c++" className="bg-pink-400" id="r3" />
-                  <Label htmlFor="r3">C++</Label>
-                </div>
-              </RadioGroup>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+      <div className="flex flex-col h-full w-full">
+        <Label className="text-2xl">{FILTER_LABEL}</Label>
+        <div className="overflow-y-auto p-2">
+          <Accordion
+            defaultValue={accorditionValues}
+            type="multiple"
+            className="w-full"
+          >
+            {FILTER_ITEMS.map((filter, index) => {
+              const { title } = filter;
+
+              const renderContent: (_: IFilterItem) => React.ReactNode = (
+                filter: IFilterItem
+              ) => {
+                const { type, handlerKey, defaultValue } = filter;
+                const handlerObj = onChangeHandlers.find(
+                  ({ key }) => key === handlerKey
+                );
+
+                switch (type) {
+                  case 'input':
+                    return (
+                      <Input
+                        onChange={(e) => handlerObj?.onChange(e.target.value)}
+                      />
+                    );
+                  case 'radio':
+                    const { radioItems } = filter;
+
+                    return (
+                      <RadioGroup
+                        defaultValue={defaultValue}
+                        onValueChange={(lang) => handlerObj?.onChange(lang)}
+                      >
+                        {radioItems?.map((radioItem, index) => {
+                          const { label, value, className } = radioItem;
+                          const id = `r${index}`;
+
+                          return (
+                            <div
+                              key={`radio_${value}`}
+                              className="flex items-center space-x-2"
+                            >
+                              <RadioGroupItem
+                                value={value}
+                                className={className}
+                                id={id}
+                              />
+                              <Label htmlFor={id}>{label}</Label>
+                            </div>
+                          );
+                        })}
+                      </RadioGroup>
+                    );
+                  default:
+                    return <></>;
+                }
+              };
+
+              return (
+                <AccordionItem
+                  key={`filter_item_${index}`}
+                  value={accorditionValues[index]}
+                >
+                  <AccordionTrigger>{title}</AccordionTrigger>
+                  <AccordionContent>{renderContent(filter)}</AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
+        </div>
       </div>
       <div className="flex flex-col gap-2 w-full mb-2">{children}</div>
     </div>

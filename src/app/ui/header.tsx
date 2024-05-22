@@ -12,19 +12,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ACCOUNT_MENU_TITLE, HEADER_TITLE } from '../lib/const/header';
 
 interface HeaderProps {}
 
 const Header: FunctionComponent<HeaderProps> = (props) => {
   return (
-    <div className="flex justify-between items-center py-1 px-10">
-      <Label>Пользователи сервиса GitHub</Label>
+    <div className="flex justify-between items-center py-1 px-4">
+      <Label>{HEADER_TITLE}</Label>
       <DropdownMenu>
         <DropdownMenuTrigger>
           <MyAvatar />
         </DropdownMenuTrigger>
         <DropdownMenuContent side="left">
-          <DropdownMenuLabel>Мой Аккаунт</DropdownMenuLabel>
+          <DropdownMenuLabel>{ACCOUNT_MENU_TITLE}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem className="p-0">
             <SignOutButton />

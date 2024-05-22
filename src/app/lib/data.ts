@@ -7,14 +7,14 @@ export async function fetchFilteredUsers(
     login: string;
     lang: string;
   },
-  sort: {
-    field: string;
+  sorting: {
+    sort: string;
     order: string;
-  }
+  },
+  accessToken: string
 ) {
   const { login, lang } = filter;
-  const { field, order } = sort;
-  const session = await auth();
+  const { sort, order } = sorting;
 
   const typeSearch = `type:user`;
   const loginSearch = login ? login + ' in:login' : '';
@@ -27,11 +27,10 @@ export async function fetchFilteredUsers(
   const searchParams = new URLSearchParams({
     q,
     p: String(page),
-    per_page: '3',
   });
 
-  if (field) {
-    searchParams.append('s', field);
+  if (sort) {
+    searchParams.append('s', sort);
   }
 
   if (order) {
@@ -41,7 +40,7 @@ export async function fetchFilteredUsers(
   const data = await fetch(
     'https://api.github.com/search/users?' + searchParams,
     {
-      headers: [['Authorization', session?.accessToken ?? '']],
+      headers: [['Authorization', accessToken]],
     }
   ).then(async (res) => {
     return res.json() as Promise<{

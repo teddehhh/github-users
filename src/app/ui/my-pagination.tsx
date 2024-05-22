@@ -10,20 +10,19 @@ import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { FunctionComponent, useEffect } from 'react';
+import { FunctionComponent } from 'react';
 
 interface MyPaginationProps {
-  totalCount: number;
-  children?: React.ReactNode;
+  totalCount: number | null;
 }
 
 const MyPagination: FunctionComponent<MyPaginationProps> = (props) => {
-  const { children, totalCount } = props;
+  const { totalCount } = props;
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get('page')) || 1;
-  const totalPages = Math.ceil(Number(totalCount) / 30);
+  const totalPages = Math.ceil(Number(totalCount) / 30) || 1;
 
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
@@ -33,8 +32,7 @@ const MyPagination: FunctionComponent<MyPaginationProps> = (props) => {
   };
 
   return (
-    <div className="relative flex flex-row justify-start items-center p-1">
-      {children}
+    <div className="flex items-center p-1">
       <Pagination>
         <PaginationContent>
           <PaginationItem>
@@ -42,7 +40,7 @@ const MyPagination: FunctionComponent<MyPaginationProps> = (props) => {
               className={cn(currentPage > 1 || 'pointer-events-none')}
               href={createPageURL(currentPage - 1)}
             >
-              <Button variant="ghost" disabled={currentPage === 1}>
+              <Button variant="ghost" disabled={currentPage <= 1}>
                 <ChevronLeft className="h-4 w-4" />
               </Button>
             </Link>

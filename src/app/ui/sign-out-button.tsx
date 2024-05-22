@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { CloudOff, Loader2, LogOut } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
 import { FunctionComponent, useEffect, useState } from 'react';
+import { EXIT_TITLE } from '../lib/const/sign-out-button';
 
 interface SignOutButtonProps {}
 
@@ -33,7 +34,7 @@ const SignOutButton: FunctionComponent<SignOutButtonProps> = () => {
       >
         <div className="flex w-full justify-evenly">
           <LogOut />
-          Выход
+          {EXIT_TITLE}
         </div>
       </Button>
     );

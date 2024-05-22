@@ -1,10 +1,8 @@
-'use client';
-
 import { Button } from '@/components/ui/button';
 import { TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ArrowDown01, ArrowDown10 } from 'lucide-react';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent } from 'react';
 
 interface MyTableHeaderProps {
   headers: {
@@ -84,7 +82,7 @@ const MyTableHeader: FunctionComponent<MyTableHeaderProps> = (props) => {
   };
 
   return (
-    <TableHeader className="sticky top-0 bg-[#f1f5f9]">
+    <TableHeader className="sticky top-0 bg-[#f1f5f9] ">
       <TableRow>
         {headers.map((header) => (
           <TableHead className={header.className} key={header.field}>

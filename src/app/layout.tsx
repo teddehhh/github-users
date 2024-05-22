@@ -4,6 +4,8 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import { auth } from './api/auth/auth';
 import SessionProvider from './api/auth/session-provider';
+import StoreProvider from './lib/store-provider';
+import Header from './ui/header';
 
 /** fonts */
 const inter = Inter({ subsets: ['latin'] });
@@ -29,8 +31,11 @@ export default async function RootLayout({
           inter.className
         )}
       >
-        <main className="relative h-full w-full flex flex-col min-h-screen">
-          <SessionProvider session={session}>{children}</SessionProvider>
+        <main className="flex flex-col h-full w-full">
+          <SessionProvider session={session}>
+            <Header />
+            {children}
+          </SessionProvider>
         </main>
       </body>
     </html>

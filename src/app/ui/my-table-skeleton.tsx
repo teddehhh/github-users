@@ -9,34 +9,15 @@ import {
 } from '@/components/ui/table';
 import { FunctionComponent } from 'react';
 import MyTableHeader from './my-table-header';
+import { TABLE_HEADERS } from '../lib/const/table-headers';
 
 interface MyTableProps {}
 
 const MyTableSkeleton: FunctionComponent<MyTableProps> = async (props) => {
-  const headers: {
-    title: string;
-    field: string;
-    type: 'img' | 'text' | 'boolean';
-    align?: 'left' | 'center' | 'right' | 'justify' | 'char';
-    className?: string;
-    sort?: boolean;
-  }[] = [
-    {
-      title: '',
-      field: 'avatar_url',
-      type: 'img',
-      align: 'center',
-      className: 'w-[100px]',
-    },
-    { title: 'Имя', field: 'login', type: 'text' },
-    { title: 'Подписчики', field: 'followers', type: 'text', sort: true },
-    { title: 'Репозитории', field: 'repositories', type: 'text', sort: true },
-  ];
-
   return (
     <div className={'overflow-y-auto h-full'}>
       <Table>
-        <MyTableHeader headers={headers} />
+        <MyTableHeader headers={TABLE_HEADERS} />
         <TableBody>
           {Array.from(Array(10).keys()).map((item) => (
             <TableRow key={item}>

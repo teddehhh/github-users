@@ -1,61 +1,58 @@
+'use client';
+
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import clsx from 'clsx';
 import Image from 'next/image';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import MyTableHeader from './my-table-header';
+import { KEY_FIELD, TABLE_HEADERS } from '../lib/const/table-headers';
+import { renderCell } from '../lib/render-cell';
+import { fetchFilteredUsers } from '../lib/data';
+import { useSession } from 'next-auth/react';
+
+import MyPagination from './my-pagination';
+import MyTableControl from './my-table-control';
+import { USERS_NOT_FOUND } from '../lib/const/my-table';
 
 interface MyTableProps {
-  items: any[];
+  filter: { login: string; lang: string };
+  sorting: { sort: string; order: string };
+  page: number;
   className?: string;
 }
 
-const MyTable: FunctionComponent<MyTableProps> = async (props) => {
-  const { items, className } = props;
+const MyTable: FunctionComponent<MyTableProps> = (props) => {
+  const {
+    filter: { login, lang },
+    sorting: { sort, order },
+    page,
+    className,
+  } = props;
 
-  const headers: {
-    title: string;
-    field: string;
-    type: 'img' | 'text' | 'boolean';
-    align?: 'left' | 'center' | 'right' | 'justify' | 'char';
-    className?: string;
-    sort?: boolean;
-  }[] = [
-    {
-      title: '',
-      field: 'avatar_url',
-      type: 'img',
-      align: 'center',
-      className: 'w-[100px]',
-    },
-    { title: 'Имя', field: 'login', type: 'text' },
-    { title: 'Подписчики', field: 'followers', type: 'text', sort: true },
-    { title: 'Репозитории', field: 'repositories', type: 'text', sort: true },
-  ];
+  const [users, setUsers] = useState<{ login: string; avatar_url: string }[]>(
+    []
+  );
+  const [totalCount, setTotalCount] = useState<number | null>(null);
 
-  const keyField = 'login';
+  const { data } = useSession();
 
-  const getFieldValue = (item: any, field: string, type: string) => {
-    switch (type) {
-      case 'text':
-        return item[field];
-      case 'img':
-        return (
-          <Image
-            className="rounded-full"
-            src={item[field]}
-            alt={field}
-            width={28}
-            height={28}
-          />
-        );
-      case 'boolean':
-        return Boolean(item[field]) ? 'True' : 'False';
-      default:
-        break;
-    }
-  };
+  useEffect(() => {
+    const getUsers = async () => {
+      const { items, total_count } = await fetchFilteredUsers(
+        page,
+        { login, lang },
+        { sort, order },
+        data?.accessToken ?? ''
+      ).then((data) => data);
 
-  if (!items.length) {
+      setUsers(items);
+      setTotalCount(total_count);
+    };
+
+    getUsers();
+  }, [data?.accessToken, login, lang, page, sort, order]);
+
+  if (!users.length) {
     return (
       <div className="h-full flex flex-row justify-center items-center gap-4">
         <Image
@@ -65,34 +62,38 @@ const MyTable: FunctionComponent<MyTableProps> = async (props) => {
           height={100}
         />
         <div>
-          <label>Пользователи не нашлись {':('}</label>
+          <label>{USERS_NOT_FOUND}</label>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={clsx('overflow-y-auto h-full', className)}>
-      <Table>
-        <MyTableHeader headers={headers} />
-        <TableBody>
-          {items.map((item) => {
-            return (
-              <TableRow key={item[keyField]}>
-                {headers.map((header) => (
-                  <TableCell
-                    align={header?.align}
-                    key={`${item[keyField]}_${header.field}`}
-                  >
-                    {getFieldValue(item, header.field, header.type)}
-                  </TableCell>
-                ))}
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+    <>
+      <MyTableControl />
+      <div className={clsx('overflow-y-auto h-full', className)}>
+        <Table>
+          <MyTableHeader headers={TABLE_HEADERS} />
+          <TableBody>
+            {users.map((user) => {
+              return (
+                <TableRow key={user[KEY_FIELD]}>
+                  {TABLE_HEADERS.map((header) => (
+                    <TableCell
+                      align={header?.align}
+                      key={`${user[KEY_FIELD]}_${header.field}`}
+                    >
+                      {renderCell(user, header.field, header.type)}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+      <MyPagination totalCount={totalCount} />
+    </>
   );
 };
 
