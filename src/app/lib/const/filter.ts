@@ -9,18 +9,17 @@ type RadioItem = {
 export interface IFilterItem {
   title: string;
   type: 'input' | 'radio';
-  handlerKey?: string;
+  stateKey?: string;
   defaultValue?: string;
   radioItems?: RadioItem[];
 }
 
 export const FILTER_ITEMS: IFilterItem[] = [
-  { title: 'Имя', type: 'input', handlerKey: 'name' },
+  { title: 'Имя', type: 'input', stateKey: 'name' },
   {
     title: 'Язык',
     type: 'radio',
-    handlerKey: 'lang',
-    defaultValue: 'all',
+    stateKey: 'lang',
     radioItems: [
       { value: 'all', label: 'Все' },
       { value: 'html', label: 'HTML', className: 'bg-orange-500' },

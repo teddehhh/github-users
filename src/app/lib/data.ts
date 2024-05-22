@@ -1,5 +1,6 @@
 import { Octokit } from 'octokit';
 import { auth } from '../api/auth/auth';
+import { IUser } from './interface';
 
 export async function fetchFilteredUsers(
   page: number,
@@ -45,7 +46,7 @@ export async function fetchFilteredUsers(
   ).then(async (res) => {
     return res.json() as Promise<{
       total_count: number;
-      items: { login: string; avatar_url: string }[];
+      items: IUser[];
     }>;
   });
 

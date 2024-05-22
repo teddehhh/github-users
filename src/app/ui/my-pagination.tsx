@@ -11,49 +11,50 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { FunctionComponent } from 'react';
+import { IPagination } from '../lib/interface';
 
 interface MyPaginationProps {
+  pagination: IPagination;
+  setPagination: (
+    _: IPagination | ((prev: IPagination) => IPagination)
+  ) => void;
   totalCount: number | null;
 }
 
 const MyPagination: FunctionComponent<MyPaginationProps> = (props) => {
-  const { totalCount } = props;
+  const { pagination, setPagination, totalCount } = props;
 
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const currentPage = Number(searchParams.get('page')) || 1;
+  const { page } = pagination;
   const totalPages = Math.ceil(Number(totalCount) / 30) || 1;
-
-  const createPageURL = (pageNumber: number | string) => {
-    const params = new URLSearchParams(searchParams);
-    params.set('page', pageNumber.toString());
-
-    return `${pathname}?${params.toString()}`;
-  };
 
   return (
     <div className="flex items-center p-1">
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <Link
-              className={cn(currentPage > 1 || 'pointer-events-none')}
-              href={createPageURL(currentPage - 1)}
+            <Button
+              variant="ghost"
+              disabled={page <= 1}
+              onClick={() =>
+                setPagination((prev) => ({ ...prev, page: page - 1 }))
+              }
             >
-              <Button variant="ghost" disabled={currentPage <= 1}>
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
-            </Link>
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
           </PaginationItem>
           <PaginationItem>
-            <Link
-              className={cn(currentPage < totalPages || 'pointer-events-none')}
-              href={createPageURL(currentPage + 1)}
+            <Button
+              variant="ghost"
+              disabled={page >= totalPages}
+              onClick={() =>
+                setPagination((prev) => ({
+                  ...prev,
+                  page: page + 1,
+                }))
+              }
             >
-              <Button variant="ghost" disabled={currentPage >= totalPages}>
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </Link>
+              <ChevronRight className="h-4 w-4" />
+            </Button>
           </PaginationItem>
         </PaginationContent>
       </Pagination>

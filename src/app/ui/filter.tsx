@@ -13,51 +13,33 @@ import { useDebouncedCallback } from 'use-debounce';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { FILTER_ITEMS, FILTER_LABEL, IFilterItem } from '../lib/const/filter';
+import { IFilter } from '../lib/interface';
 
 interface FilterProps {
+  filter: IFilter;
+  setFilter: (_: IFilter | ((prev: IFilter) => IFilter)) => void;
   children?: React.ReactNode;
 }
 
 const Filter: FunctionComponent<FilterProps> = (props) => {
-  const { children } = props;
+  const { filter, setFilter, children } = props;
+  const { login, lang } = filter;
 
-  /** getting URL params from client */
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
-
-  /** filter items handlers */
-  const onChangeHandlers = [
+  /** filter items states */
+  const states = [
     {
       key: 'name',
-      onChange: useDebouncedCallback((login: string) => {
-        const params = new URLSearchParams(searchParams);
-
-        params.set('page', '1');
-
-        if (login) {
-          params.set('login', login);
-        } else {
-          params.delete('login');
-        }
-
-        replace(`${pathname}?${params.toString()}`);
-      }, 300),
+      onChange: (login: string) => {
+        setFilter((prev) => ({ ...prev, login }));
+      },
+      value: login,
     },
     {
       key: 'lang',
       onChange: (lang: string) => {
-        const params = new URLSearchParams(searchParams);
-        params.set('page', '1');
-
-        if (lang !== 'all') {
-          params.set('lang', lang);
-        } else {
-          params.delete('lang');
-        }
-
-        replace(`${pathname}?${params.toString()}`);
+        setFilter((prev) => ({ ...prev, lang }));
       },
+      value: lang,
     },
   ];
 
@@ -81,16 +63,15 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
               const renderContent: (_: IFilterItem) => React.ReactNode = (
                 filter: IFilterItem
               ) => {
-                const { type, handlerKey, defaultValue } = filter;
-                const handlerObj = onChangeHandlers.find(
-                  ({ key }) => key === handlerKey
-                );
+                const { type, stateKey } = filter;
+                const state = states.find(({ key }) => key === stateKey);
 
                 switch (type) {
                   case 'input':
                     return (
                       <Input
-                        onChange={(e) => handlerObj?.onChange(e.target.value)}
+                        onChange={(e) => state?.onChange(e.target.value)}
+                        value={state?.value}
                       />
                     );
                   case 'radio':
@@ -98,8 +79,8 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
 
                     return (
                       <RadioGroup
-                        defaultValue={defaultValue}
-                        onValueChange={(lang) => handlerObj?.onChange(lang)}
+                        onValueChange={(lang) => state?.onChange(lang)}
+                        defaultValue={state?.value}
                       >
                         {radioItems?.map((radioItem, index) => {
                           const { label, value, className } = radioItem;
