@@ -43,11 +43,17 @@ export async function fetchFilteredUsers(
     {
       headers: [['Authorization', accessToken]],
     }
-  ).then(async (res) => {
-    return res.json() as Promise<{
-      total_count: number;
-      items: IUser[];
-    }>;
+  ).then((res) => {
+    if (res.ok) {
+      return res.json() as Promise<{
+        total_count: number;
+        items: IUser[];
+      }>;
+    }
+
+    return res.text().then((text) => {
+      throw new Error(text);
+    });
   });
 
   return data;

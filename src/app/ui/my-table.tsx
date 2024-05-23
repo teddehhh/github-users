@@ -9,12 +9,15 @@ import { KEY_FIELD, TABLE_HEADERS } from '../lib/const/table-headers';
 import { renderCell } from '../lib/render-cell';
 import MyTableHeader from './my-table-header';
 
+import { Toaster, toast } from 'sonner';
 import { USERS_NOT_FOUND } from '../lib/const/my-table';
+import { fetchFilteredUsers } from '../lib/data';
 import useLocalStorage from '../lib/hooks/useLocalStorage';
 import { IFilter, IPagination, ISorting, IUser } from '../lib/interface';
 import MyPagination from './my-pagination';
 import MyTableControl from './my-table-control';
-import { fetchFilteredUsers } from '../lib/data';
+import { GET_USER_ERROR } from '../lib/const/toasts';
+import { LOCAL_STORAGE_DATA } from '../lib/const/localStorage';
 
 interface MyTableProps {
   className?: string;
@@ -25,24 +28,9 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
 
   const [users, setUsers] = useState<IUser[]>([]);
   const [totalCount, setTotalCount] = useState<number | null>(null);
+  const [isFilterOpened, setIsFilterOpened] = useState(false);
 
-  const { states, synced } = useLocalStorage(
-    {
-      key: 'pagination',
-      initialValue: { page: 1 },
-    },
-    {
-      key: 'filter',
-      initialValue: { login: '', lang: 'all' },
-    },
-    {
-      key: 'sorting',
-      initialValue: {
-        sort: 'match',
-        order: 'desc',
-      },
-    }
-  );
+  const { states, synced } = useLocalStorage(...LOCAL_STORAGE_DATA);
 
   const [
     { state: pagination, setState: setPagination },
@@ -53,7 +41,7 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
   const { data } = useSession();
 
   useEffect(() => {
-    const getUsers = async () => {
+    async function getUsers() {
       const { page } = pagination as IPagination;
       const { login, lang } = filter as IFilter;
       const { sort, order } = sorting as ISorting;
@@ -63,15 +51,30 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
         { login, lang },
         { sort, order },
         data?.accessToken ?? ''
-      ).then((data) => data);
+      );
 
       setUsers(items);
       setTotalCount(total_count);
-    };
-    if (synced) {
-      getUsers();
     }
-  }, [data?.accessToken, filter, pagination, sorting, synced]);
+
+    if (synced) {
+      getUsers().catch((error) => {
+        /**
+         * альтернатива
+         * // const strObj = (error as Error).message;
+         * // const message = JSON.parse(strObj).message as string;
+         *
+         * // descriptionClassName: 'whitespace-pre-line',
+         * // description: `Описание: ${message.slice(
+         * //   0,
+         * //   30
+         * // )}...\nПопробуйте выполнить запрос позже`,
+         */
+
+        toast(...GET_USER_ERROR);
+      });
+    }
+  }, [filter, pagination, sorting, synced, data?.accessToken]);
 
   return (
     <>
@@ -80,6 +83,7 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
         sorting={sorting as ISorting}
         setFilter={setFilter}
         setSorting={setSorting}
+        onFilterOpenChange={setIsFilterOpened}
       />
       <div className={clsx('overflow-y-auto h-full', className)}>
         {users && users.length ? (
@@ -120,6 +124,12 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
         pagination={pagination as IPagination}
         setPagination={setPagination}
         totalCount={totalCount}
+      />
+      <Toaster
+        className={clsx(
+          { 'z-0': isFilterOpened },
+          { 'delay-500': !isFilterOpened }
+        )}
       />
     </>
   );

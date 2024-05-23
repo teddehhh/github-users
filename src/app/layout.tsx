@@ -1,10 +1,9 @@
+import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import './globals.css';
-import { cn } from '@/lib/utils';
 import { auth } from './api/auth/auth';
 import SessionProvider from './api/auth/session-provider';
-import StoreProvider from './lib/store-provider';
+import './globals.css';
 import Header from './ui/header';
 
 /** fonts */
