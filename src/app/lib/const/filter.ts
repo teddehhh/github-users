@@ -29,3 +29,5 @@ export const FILTER_ITEMS: IFilterItem[] = [
     ],
   },
 ];
+
+export const CLEAR_BUTTON = 'Очистить';

@@ -7,22 +7,25 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Input } from '@/components/ui/input';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import React, { FunctionComponent } from 'react';
-import { useDebouncedCallback } from 'use-debounce';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { FILTER_ITEMS, FILTER_LABEL, IFilterItem } from '../lib/const/filter';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import React, { FunctionComponent } from 'react';
+import {
+  CLEAR_BUTTON,
+  FILTER_ITEMS,
+  FILTER_LABEL,
+  IFilterItem,
+} from '../lib/const/filter';
 import { IFilter } from '../lib/interface';
+import { Button } from '@/components/ui/button';
 
 interface FilterProps {
   filter: IFilter;
   setFilter: (_: IFilter | ((prev: IFilter) => IFilter)) => void;
-  children?: React.ReactNode;
 }
 
 const Filter: FunctionComponent<FilterProps> = (props) => {
-  const { filter, setFilter, children } = props;
+  const { filter, setFilter } = props;
   const { login, lang } = filter;
 
   /** filter items states */
@@ -80,7 +83,7 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
                     return (
                       <RadioGroup
                         onValueChange={(lang) => state?.onChange(lang)}
-                        defaultValue={state?.value}
+                        value={state?.value}
                       >
                         {radioItems?.map((radioItem, index) => {
                           const { label, value, className } = radioItem;
@@ -120,7 +123,14 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
           </Accordion>
         </div>
       </div>
-      <div className="flex flex-col gap-2 w-full mb-2">{children}</div>
+      <div className="flex flex-col gap-2 w-full mb-2">
+        <Button
+          variant="destructive"
+          onClick={() => setFilter({ login: '', lang: 'all' })}
+        >
+          {CLEAR_BUTTON}
+        </Button>
+      </div>
     </div>
   );
 };

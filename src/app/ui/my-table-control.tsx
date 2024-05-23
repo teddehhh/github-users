@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
 
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -7,19 +8,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Label } from '@/components/ui/label';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { ArrowDown01, ArrowDown10, ChevronRight } from 'lucide-react';
-import Filter from './filter';
+import { ChevronRight } from 'lucide-react';
+import { SORT_PREFIX } from '../lib/const/my-table-control';
 import {
   DEFAULT_ORDER,
   DEFAULT_SORT,
   ORDER_ITEMS,
   SORTING_ITEMS,
 } from '../lib/const/sorting';
-import { SORT_PREFIX } from '../lib/const/my-table-control';
-import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import { IFilter, ISorting } from '../lib/interface';
+import Filter from './filter';
 
 interface MyTableControlProps {
   sorting: ISorting;
