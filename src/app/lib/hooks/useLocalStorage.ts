@@ -13,6 +13,7 @@ function useLocalStorage(...args: IObj[]) {
   const [store, setStore] = useState<IStoreRecord>(
     args.reduce((obj, item) => ({ ...obj, [item.key]: item.initialValue }), {})
   );
+  const [synced, setSynced] = useState(false);
 
   const states = Object.keys(store).map((key) => ({
     key,
@@ -38,10 +39,12 @@ function useLocalStorage(...args: IObj[]) {
         setState(JSON.parse(items));
       }
     });
+
+    setSynced(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return states;
+  return { states, synced };
 }
 
 export default useLocalStorage;

@@ -26,11 +26,7 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [totalCount, setTotalCount] = useState<number | null>(null);
 
-  const [
-    { state: pagination, setState: setPagination },
-    { state: filter, setState: setFilter },
-    { state: sorting, setState: setSorting },
-  ] = useLocalStorage(
+  const { states, synced } = useLocalStorage(
     {
       key: 'pagination',
       initialValue: { page: 1 },
@@ -48,6 +44,12 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
     }
   );
 
+  const [
+    { state: pagination, setState: setPagination },
+    { state: filter, setState: setFilter },
+    { state: sorting, setState: setSorting },
+  ] = states;
+
   const { data } = useSession();
 
   useEffect(() => {
@@ -64,12 +66,12 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
       ).then((data) => data);
 
       setUsers(items);
-      console.log({ items, total_count });
       setTotalCount(total_count);
     };
-
-    getUsers();
-  }, [data?.accessToken, filter, pagination, sorting]);
+    if (synced) {
+      getUsers();
+    }
+  }, [data?.accessToken, filter, pagination, sorting, synced]);
 
   return (
     <>

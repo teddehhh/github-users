@@ -50,6 +50,10 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
     (key) => `item-${key}`
   );
 
+  /** TODO: изменить сравнение объектов */
+  const isClearButtonDisabled =
+    JSON.stringify(filter) === JSON.stringify({ login: '', lang: 'all' });
+
   return (
     <div className="flex flex-col h-full w-full justify-between mt-4 text-sm gap-2">
       <div className="flex flex-col h-full w-full">
@@ -126,6 +130,7 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
       <div className="flex flex-col gap-2 w-full mb-2">
         <Button
           variant="destructive"
+          disabled={isClearButtonDisabled}
           onClick={() => setFilter({ login: '', lang: 'all' })}
         >
           {CLEAR_BUTTON}
