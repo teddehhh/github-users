@@ -5,6 +5,7 @@ import { auth } from './api/auth/auth';
 import SessionProvider from './api/auth/session-provider';
 import './globals.css';
 import Header from './ui/header';
+import { ThemeProvider } from '@/app/components/theme-provider';
 
 /** fonts */
 const inter = Inter({ subsets: ['latin'] });
@@ -32,8 +33,15 @@ export default async function RootLayout({
       >
         <main className="flex flex-col h-full w-full">
           <SessionProvider session={session}>
-            <Header />
-            {children}
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Header />
+              {children}
+            </ThemeProvider>
           </SessionProvider>
         </main>
       </body>

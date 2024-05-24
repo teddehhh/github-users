@@ -82,7 +82,7 @@ const MyTableHeader: FunctionComponent<MyTableHeaderProps> = (props) => {
   };
 
   return (
-    <TableHeader className="sticky top-0 bg-[#f1f5f9] ">
+    <TableHeader className="sticky top-0 bg-muted">
       <TableRow>
         {headers.map((header) => (
           <TableHead className={header.className} key={header.field}>

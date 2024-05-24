@@ -32,8 +32,8 @@ const SignOutButton: FunctionComponent<SignOutButtonProps> = () => {
           await signOut();
         }}
       >
-        <div className="flex w-full justify-evenly">
-          <LogOut />
+        <div className="flex w-full justify-evenly items-center">
+          <LogOut width={16} height={16} />
           {EXIT_TITLE}
         </div>
       </Button>

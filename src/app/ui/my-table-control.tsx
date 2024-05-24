@@ -8,12 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Sheet,
-  SheetContent,
-  SheetOverlay,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { ChevronRight } from 'lucide-react';
 import { SORT_PREFIX } from '../lib/const/my-table-control';
 import {
@@ -38,7 +33,7 @@ const MyTableControl: FunctionComponent<MyTableControlProps> = (props) => {
   const { sort, order } = sorting;
 
   return (
-    <div className="flex flex-row items-center gap-4 px-4 py-2 bg-muted rounded-t-3xl flex-wrap">
+    <div className="flex flex-row items-center gap-4 px-4 py-2 bg-muted rounded-t-3xl">
       <Sheet onOpenChange={onFilterOpenChange}>
         <SheetTrigger>
           <ChevronRight className="h-5 w-5" />
@@ -47,7 +42,7 @@ const MyTableControl: FunctionComponent<MyTableControlProps> = (props) => {
           <Filter filter={filter} setFilter={setFilter} />
         </SheetContent>
       </Sheet>
-      <div className="flex flex-row items-center gap-2">
+      <div className="flex flex-row items-center gap-2 flex-wrap">
         <Label>{SORT_PREFIX}</Label>
         <Select
           value={sort}
