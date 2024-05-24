@@ -42,7 +42,20 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
     { state: sorting, setState: setSorting },
   ] = states;
 
+  const setFilterWithPageReset = (obj: Object | ((prev: Object) => Object)) => {
+    setFilter(obj);
+    setPagination({ page: 1 } as IPagination);
+  };
+
+  const setSortingWithPageReset = (
+    obj: Object | ((prev: Object) => Object)
+  ) => {
+    setSorting(obj);
+    setPagination({ page: 1 } as IPagination);
+  };
+
   const { data } = useSession();
+
   useEffect(() => {
     async function getUsers() {
       const { page } = pagination as IPagination;
@@ -73,15 +86,16 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
           setShowLoader(false);
         });
     }
-  }, [filter, pagination, sorting, synced, data?.accessToken]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pagination, synced, data?.accessToken]);
 
   return (
     <>
       <MyTableControl
         filter={filter as IFilter}
         sorting={sorting as ISorting}
-        setFilter={setFilter}
-        setSorting={setSorting}
+        setFilter={setFilterWithPageReset}
+        setSorting={setSortingWithPageReset}
         onFilterOpenChange={setIsFilterOpened}
       />
       <div className={clsx('overflow-y-auto h-full', className)}>
