@@ -109,6 +109,8 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
         ) : (
           <div className="h-full flex flex-row justify-center items-center gap-4">
             <Image
+              className="w-auto h-auto"
+              priority
               src={'/github-mark.svg'}
               alt="github-logo"
               width={100}

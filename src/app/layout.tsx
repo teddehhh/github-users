@@ -31,19 +31,19 @@ export default async function RootLayout({
           inter.className
         )}
       >
-        <main className="flex flex-col h-full w-full">
-          <SessionProvider session={session}>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main className="flex flex-col h-full w-full">
+            <SessionProvider session={session}>
               <Header />
               {children}
-            </ThemeProvider>
-          </SessionProvider>
-        </main>
+            </SessionProvider>
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );

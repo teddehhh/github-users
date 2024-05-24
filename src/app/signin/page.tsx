@@ -1,12 +1,19 @@
-import Image from 'next/image';
 import { outfit } from '@/app/ui/fonts';
 import { Button } from '@/components/ui/button';
 import { FunctionComponent } from 'react';
-import { signIn } from '@/app/api/auth/auth';
+import { auth, signIn } from '@/app/api/auth/auth';
+import { redirect } from 'next/navigation';
+import Image from 'next/image';
 
 interface SignInPageProps {}
 
-const SignInPage: FunctionComponent<SignInPageProps> = () => {
+const SignInPage: FunctionComponent<SignInPageProps> = async () => {
+  const session = await auth();
+
+  if (session?.user) {
+    redirect('/');
+  }
+
   return (
     <div className="flex flex-col gap-2 h-full items-center justify-center">
       <form
@@ -17,10 +24,10 @@ const SignInPage: FunctionComponent<SignInPageProps> = () => {
       >
         <Button
           type="submit"
-          className="p-2 flex items-center gap-5 bg-[#22272e] rounded-md px-5"
+          className="p-2 flex items-center gap-5 rounded-md px-5"
         >
           <Image
-            src={'/github-mark-white.svg'}
+            src={'/github-mark.svg'}
             alt="github-logo"
             width={22}
             height={22}

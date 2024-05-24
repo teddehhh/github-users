@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import { auth } from './api/auth/auth';
-import Header from './ui/header';
 import MyTable from './ui/my-table';
 
 export default async function Home() {
