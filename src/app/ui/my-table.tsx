@@ -9,15 +9,18 @@ import { KEY_FIELD, TABLE_HEADERS } from '../lib/const/table-headers';
 import { renderCell } from '../lib/render-cell';
 import MyTableHeader from './my-table-header';
 
+import { useTheme } from 'next-themes';
 import { Toaster, toast } from 'sonner';
+import { LOCAL_STORAGE_DATA } from '../lib/const/localStorage';
 import { USERS_NOT_FOUND } from '../lib/const/my-table';
+import { getUserError } from '../lib/const/toasts';
 import { fetchFilteredUsers } from '../lib/data';
 import useLocalStorage from '../lib/hooks/useLocalStorage';
 import { IFilter, IPagination, ISorting, IUser } from '../lib/interface';
+import { ToasterThemes } from '../lib/types/toaster';
+import Loader from './loader';
 import MyPagination from './my-pagination';
 import MyTableControl from './my-table-control';
-import { GET_USER_ERROR } from '../lib/const/toasts';
-import { LOCAL_STORAGE_DATA } from '../lib/const/localStorage';
 
 interface MyTableProps {
   className?: string;
@@ -29,7 +32,8 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
   const [users, setUsers] = useState<IUser[]>([]);
   const [totalCount, setTotalCount] = useState<number | null>(null);
   const [isFilterOpened, setIsFilterOpened] = useState(false);
-
+  const [showLoader, setShowLoader] = useState(true);
+  const { theme } = useTheme();
   const { states, synced } = useLocalStorage(...LOCAL_STORAGE_DATA);
 
   const [
@@ -39,13 +43,13 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
   ] = states;
 
   const { data } = useSession();
-
   useEffect(() => {
     async function getUsers() {
       const { page } = pagination as IPagination;
       const { login, lang } = filter as IFilter;
       const { sort, order } = sorting as ISorting;
 
+      setShowLoader(true);
       const { items, total_count } = await fetchFilteredUsers(
         page,
         { login, lang },
@@ -58,21 +62,16 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
     }
 
     if (synced) {
-      getUsers().catch((error) => {
-        /**
-         * альтернатива
-         * // const strObj = (error as Error).message;
-         * // const message = JSON.parse(strObj).message as string;
-         *
-         * // descriptionClassName: 'whitespace-pre-line',
-         * // description: `Описание: ${message.slice(
-         * //   0,
-         * //   30
-         * // )}...\nПопробуйте выполнить запрос позже`,
-         */
+      getUsers()
+        .then(() => setShowLoader(false))
+        .catch((error) => {
+          const strObj = (error as Error).message;
+          const message = JSON.parse(strObj).message as string;
+          const config = getUserError(message);
 
-        toast(...GET_USER_ERROR);
-      });
+          toast(...config);
+          setShowLoader(false);
+        });
     }
   }, [filter, pagination, sorting, synced, data?.accessToken]);
 
@@ -127,7 +126,9 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
         setPagination={setPagination}
         totalCount={totalCount}
       />
+      {showLoader ? <Loader /> : null}
       <Toaster
+        theme={theme as ToasterThemes}
         className={clsx(
           { 'z-0': isFilterOpened },
           { 'delay-500': !isFilterOpened }

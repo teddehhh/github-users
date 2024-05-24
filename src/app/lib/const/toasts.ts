@@ -1,10 +1,16 @@
-import { ToastParams } from '../types/toaster';
+import { ToastConfig, ToastParams } from '../types/toaster';
 
-export const GET_USER_ERROR: ToastParams = [
-  'Не удалось загрузить данные',
-  {
-    duration: 5000,
-    description: 'Попробуйте выполнить запрос позже',
-    action: { label: 'Закрыть', onClick: () => {} },
-  },
-];
+export const getUserError = (message: string): ToastParams => {
+  return [
+    'Не удалось загрузить данные',
+    {
+      descriptionClassName: 'whitespace-pre-line',
+      duration: 5000,
+      description: `Описание: ${message.slice(
+        0,
+        30
+      )}...\nПопробуйте выполнить запрос позже`,
+      action: { label: 'Закрыть', onClick: () => {} },
+    },
+  ];
+};
