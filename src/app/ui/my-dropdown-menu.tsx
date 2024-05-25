@@ -40,7 +40,7 @@ const MyDropdownMenu: FunctionComponent<MyDropdownMenuProps> = () => {
           <SignOutButton />
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="p-0 mb-2 w-full">
+        <DropdownMenuItem className="p-0 mb-2 focus:bg-transparent w-full">
           <Slider
             dropdownOpenHandler={setIsOpened}
             preventOpenHandler={setIsPrevent}

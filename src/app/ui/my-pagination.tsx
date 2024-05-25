@@ -12,6 +12,12 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { FunctionComponent } from 'react';
 import { IPagination } from '../lib/interface';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface MyPaginationProps {
   pagination: IPagination;
@@ -32,29 +38,47 @@ const MyPagination: FunctionComponent<MyPaginationProps> = (props) => {
       <Pagination>
         <PaginationContent>
           <PaginationItem>
-            <Button
-              variant="ghost"
-              disabled={page <= 1}
-              onClick={() =>
-                setPagination((prev) => ({ ...prev, page: page - 1 }))
-              }
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    disabled={page <= 1}
+                    onClick={() =>
+                      setPagination((prev) => ({ ...prev, page: page - 1 }))
+                    }
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Пред. страница</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </PaginationItem>
           <PaginationItem>
-            <Button
-              variant="ghost"
-              disabled={page >= totalPages}
-              onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  page: page + 1,
-                }))
-              }
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    disabled={page >= totalPages}
+                    onClick={() =>
+                      setPagination((prev) => ({
+                        ...prev,
+                        page: page + 1,
+                      }))
+                    }
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>След. страница</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </PaginationItem>
         </PaginationContent>
       </Pagination>

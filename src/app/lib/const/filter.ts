@@ -12,10 +12,11 @@ export interface IFilterItem {
   stateKey?: string;
   defaultValue?: string;
   radioItems?: RadioItem[];
+  placeholder?: string;
 }
 
 export const FILTER_ITEMS: IFilterItem[] = [
-  { title: 'Имя', type: 'input', stateKey: 'name' },
+  { title: 'Имя', type: 'input', stateKey: 'name', placeholder: 'Введите имя' },
   {
     title: 'Язык',
     type: 'radio',

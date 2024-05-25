@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
 
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -33,10 +34,12 @@ const MyTableControl: FunctionComponent<MyTableControlProps> = (props) => {
   const { sort, order } = sorting;
 
   return (
-    <div className="flex flex-row items-center gap-4 px-4 py-2 bg-muted rounded-t-3xl">
+    <div className="flex flex-row items-center gap-4 px-4 py-2 bg-muted rounded-t-3xl flex-wrap">
       <Sheet onOpenChange={onFilterOpenChange}>
-        <SheetTrigger>
-          <ChevronRight className="h-5 w-5" />
+        <SheetTrigger asChild>
+          <Button variant="ghost">
+            <ChevronRight className="h-5 w-5" />
+          </Button>
         </SheetTrigger>
         <SheetContent side={'left'}>
           <Filter filter={filter} setFilter={setFilter} />

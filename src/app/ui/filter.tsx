@@ -70,7 +70,7 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
               const renderContent: (_: IFilterItem) => React.ReactNode = (
                 filter: IFilterItem
               ) => {
-                const { type, stateKey } = filter;
+                const { type, stateKey, placeholder } = filter;
                 const state = states.find(({ key }) => key === stateKey);
 
                 switch (type) {
@@ -79,6 +79,7 @@ const Filter: FunctionComponent<FilterProps> = (props) => {
                       <Input
                         onChange={(e) => state?.onChange(e.target.value)}
                         value={state?.value}
+                        placeholder={placeholder}
                       />
                     );
                   case 'radio':
