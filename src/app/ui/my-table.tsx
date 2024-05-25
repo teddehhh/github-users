@@ -21,7 +21,7 @@ import { ToasterThemes } from '../lib/types/toaster';
 import Loader from './loader';
 import MyPagination from './my-pagination';
 import MyTableControl from './my-table-control';
-
+import { useDebouncedCallback } from 'use-debounce';
 interface MyTableProps {
   className?: string;
 }
@@ -42,9 +42,11 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
     { state: sorting, setState: setSorting },
   ] = states;
 
+  const setPaginationWithDebounce = useDebouncedCallback(setPagination, 1000);
+
   const setFilterWithPageReset = (obj: Object | ((prev: Object) => Object)) => {
     setFilter(obj);
-    setPagination({ page: 1 } as IPagination);
+    setPaginationWithDebounce({ page: 1 } as IPagination);
   };
 
   const setSortingWithPageReset = (
