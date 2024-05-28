@@ -1,11 +1,11 @@
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { auth } from './api/auth/auth';
-import SessionProvider from './api/auth/session-provider';
+import { auth } from '../lib/auth';
+import SessionProvider from '../components/providers/session-provider';
 import './globals.css';
-import Header from './ui/header';
-import { ThemeProvider } from '@/app/components/theme-provider';
+import Header from '../components/header';
+import { ThemeProvider } from '@/components/providers/theme-provider';
 
 /** fonts */
 const inter = Inter({ subsets: ['latin'] });

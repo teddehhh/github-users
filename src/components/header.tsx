@@ -3,7 +3,7 @@ import { FunctionComponent } from 'react';
 
 import { HEADER_TITLE } from '../lib/const/header';
 import MyDropdownMenu from './my-dropdown-menu';
-import { auth } from '../api/auth/auth';
+import { auth } from '../lib/auth';
 
 interface HeaderProps {}
 

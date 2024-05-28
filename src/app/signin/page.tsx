@@ -1,7 +1,7 @@
-import { outfit } from '@/app/ui/fonts';
+import { outfit } from '@/lib/fonts';
 import { Button } from '@/components/ui/button';
 import { FunctionComponent } from 'react';
-import { auth, signIn } from '@/app/api/auth/auth';
+import { auth, signIn } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 

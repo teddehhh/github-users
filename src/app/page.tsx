@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import { auth } from './api/auth/auth';
-import MyTable from './ui/my-table';
+import { auth } from '../lib/auth';
+import MyTable from '../components/my-table';
 
 export default async function Home() {
   /** getting session */

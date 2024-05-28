@@ -1,5 +1,5 @@
 import { Octokit } from 'octokit';
-import { auth } from '../api/auth/auth';
+import { auth } from './auth';
 import { IUser } from './interface';
 
 export async function fetchFilteredUsers(
