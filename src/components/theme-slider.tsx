@@ -15,7 +15,7 @@ interface SliderProps {
   preventOpenHandler: (_: boolean) => void;
 }
 
-const Slider: FunctionComponent<SliderProps> = (props) => {
+const ThemeSlider: FunctionComponent<SliderProps> = (props) => {
   const { dropdownOpenHandler, preventOpenHandler } = props;
   const { theme, setTheme } = useTheme();
 
@@ -71,4 +71,4 @@ const Slider: FunctionComponent<SliderProps> = (props) => {
   );
 };
 
-export default Slider;
+export default ThemeSlider;

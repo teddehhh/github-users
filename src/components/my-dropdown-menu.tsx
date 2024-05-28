@@ -11,7 +11,7 @@ import { FunctionComponent, useEffect, useState } from 'react';
 import { ACCOUNT_MENU_TITLE } from '../lib/const/header';
 import MyAvatar from './my-avatar';
 import SignOutButton from './sign-out-button';
-import Slider from './slider';
+import ThemeSlider from './theme-slider';
 
 interface MyDropdownMenuProps {}
 
@@ -41,7 +41,7 @@ const MyDropdownMenu: FunctionComponent<MyDropdownMenuProps> = () => {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem className="p-0 mb-2 focus:bg-transparent w-full">
-          <Slider
+          <ThemeSlider
             dropdownOpenHandler={setIsOpened}
             preventOpenHandler={setIsPrevent}
           />
