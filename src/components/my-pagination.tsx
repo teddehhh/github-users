@@ -6,24 +6,25 @@ import {
   PaginationContent,
   PaginationItem,
 } from '@/components/ui/pagination';
-import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { FunctionComponent } from 'react';
-import { IPagination } from '../lib/interface';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  DEFAULT_PER_PAGE,
+  NEXT_TOOLTIP,
+  PREV_TOOLTIP,
+} from '@/lib/const/pagination';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Dispatch, FunctionComponent, SetStateAction } from 'react';
+import { IPagination } from '../lib/interface';
+import { Label } from './ui/label';
 
 interface MyPaginationProps {
   pagination: IPagination;
-  setPagination: (
-    _: IPagination | ((prev: IPagination) => IPagination)
-  ) => void;
+  setPagination: Dispatch<SetStateAction<IPagination>>;
   totalCount: number | null;
 }
 
@@ -31,7 +32,7 @@ const MyPagination: FunctionComponent<MyPaginationProps> = (props) => {
   const { pagination, setPagination, totalCount } = props;
 
   const { page } = pagination;
-  const totalPages = Math.ceil(Number(totalCount) / 30) || 1;
+  const totalPages = Math.ceil(Number(totalCount) / DEFAULT_PER_PAGE) || 1;
 
   return (
     <div className="flex items-center p-1">
@@ -52,10 +53,13 @@ const MyPagination: FunctionComponent<MyPaginationProps> = (props) => {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Пред. страница</p>
+                  <p>{PREV_TOOLTIP}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
+          </PaginationItem>
+          <PaginationItem className="flex justify-center w-10">
+            <Label>{page}</Label>
           </PaginationItem>
           <PaginationItem>
             <TooltipProvider>
@@ -75,7 +79,7 @@ const MyPagination: FunctionComponent<MyPaginationProps> = (props) => {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>След. страница</p>
+                  <p>{NEXT_TOOLTIP}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

@@ -5,12 +5,12 @@ export const LOCAL_STORAGE_DATA = [
   },
   {
     key: 'filter',
-    initialValue: { login: '', lang: 'all' },
+    initialValue: { login: '', language: 'all' },
   },
   {
     key: 'sorting',
     initialValue: {
-      sort: 'match',
+      sort: 'best_match',
       order: 'desc',
     },
   },

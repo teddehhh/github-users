@@ -3,25 +3,32 @@
 import { Table, TableBody, TableCell, TableRow } from '@/components/ui/table';
 import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { FunctionComponent, useEffect, useState } from 'react';
+import {
+  FunctionComponent,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { KEY_FIELD, TABLE_HEADERS } from '../lib/const/table-headers';
 import { renderCell } from '../lib/render-cell';
 import MyTableHeader from './my-table-header';
 
-import { useTheme } from 'next-themes';
+import { FILTER_APPLY_DEBOUNCE } from '@/lib/const/filter';
+import { DEFAULT_PAGE } from '@/lib/const/pagination';
+import { DEFAULT_SORT } from '@/lib/const/sorting';
 import { Toaster, toast } from 'sonner';
+import { useDebouncedCallback } from 'use-debounce';
 import { LOCAL_STORAGE_DATA } from '../lib/const/localStorage';
-import { USERS_NOT_FOUND } from '../lib/const/my-table';
-import { getUserError } from '../lib/const/toasts';
 import { fetchFilteredUsers } from '../lib/data';
 import useLocalStorage from '../lib/hooks/useLocalStorage';
 import { IFilter, IPagination, ISorting, IUser } from '../lib/interface';
-import { ToasterThemes } from '../lib/types/toaster';
 import Loader from './loader';
 import MyPagination from './my-pagination';
 import MyTableControl from './my-table-control';
-import { useDebouncedCallback } from 'use-debounce';
+import TableNotFound from './table-not-found';
+import { getUserError } from '@/lib/const/toasts';
+
 interface MyTableProps {
   className?: string;
 }
@@ -33,27 +40,26 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
   const [totalCount, setTotalCount] = useState<number | null>(null);
   const [isFilterOpened, setIsFilterOpened] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
-  const { theme } = useTheme();
-  const { states, synced } = useLocalStorage(...LOCAL_STORAGE_DATA);
 
+  const { states, synced } = useLocalStorage(...LOCAL_STORAGE_DATA);
   const [
     { state: pagination, setState: setPagination },
     { state: filter, setState: setFilter },
     { state: sorting, setState: setSorting },
   ] = states;
 
-  const setPaginationWithDebounce = useDebouncedCallback(setPagination, 1000);
+  const setPaginationWithDebounce = useDebouncedCallback(
+    setPagination,
+    FILTER_APPLY_DEBOUNCE
+  );
 
-  const setFilterWithPageReset = (obj: Object | ((prev: Object) => Object)) => {
+  const setFilterWithReset = (obj: SetStateAction<IFilter>) => {
     setFilter(obj);
-    setPaginationWithDebounce({ page: 1 } as IPagination);
+    setPaginationWithDebounce({ page: DEFAULT_PAGE } as IPagination);
   };
-
-  const setSortingWithPageReset = (
-    obj: Object | ((prev: Object) => Object)
-  ) => {
+  const setSortingWithPaginationReset = (obj: SetStateAction<ISorting>) => {
     setSorting(obj);
-    setPagination({ page: 1 } as IPagination);
+    setPagination({ page: DEFAULT_PAGE } as IPagination);
   };
 
   const { data } = useSession();
@@ -61,14 +67,18 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
   useEffect(() => {
     async function getUsers() {
       const { page } = pagination as IPagination;
-      const { login, lang } = filter as IFilter;
+      const { login, language } = filter as IFilter;
       const { sort, order } = sorting as ISorting;
 
       setShowLoader(true);
+      //TODO: Добавить адаптер для данных
       const { items, total_count } = await fetchFilteredUsers(
         page,
-        { login, lang },
-        { sort, order },
+        { login, language: language === 'all' ? '' : language },
+        {
+          sort: sort === DEFAULT_SORT.value ? '' : sort,
+          order: sort === DEFAULT_SORT.value ? '' : order,
+        },
         data?.accessToken ?? ''
       );
 
@@ -89,54 +99,46 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination, synced, data?.accessToken]);
+  }, [pagination, synced]);
+
+  const table = useMemo(() => {
+    if (users && users.length) {
+      return (
+        <Table>
+          <MyTableHeader headers={TABLE_HEADERS} />
+          <TableBody>
+            {users.map((user) => {
+              return (
+                <TableRow key={user[KEY_FIELD]}>
+                  {TABLE_HEADERS.map((header) => (
+                    <TableCell
+                      align={header?.align}
+                      key={`${user[KEY_FIELD]}_${header.field}`}
+                    >
+                      {renderCell(user, header.field, header.type)}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      );
+    }
+
+    return <TableNotFound />;
+  }, [users]);
 
   return (
     <>
       <MyTableControl
         filter={filter as IFilter}
         sorting={sorting as ISorting}
-        setFilter={setFilterWithPageReset}
-        setSorting={setSortingWithPageReset}
+        setFilter={setFilterWithReset}
+        setSorting={setSortingWithPaginationReset}
         onFilterOpenChange={setIsFilterOpened}
       />
-      <div className={clsx('overflow-y-auto h-full', className)}>
-        {users && users.length ? (
-          <Table>
-            <MyTableHeader headers={TABLE_HEADERS} />
-            <TableBody>
-              {users.map((user) => {
-                return (
-                  <TableRow key={user[KEY_FIELD]}>
-                    {TABLE_HEADERS.map((header) => (
-                      <TableCell
-                        align={header?.align}
-                        key={`${user[KEY_FIELD]}_${header.field}`}
-                      >
-                        {renderCell(user, header.field, header.type)}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        ) : (
-          <div className="h-full flex flex-row justify-center items-center gap-4">
-            <Image
-              className="w-auto h-auto"
-              priority
-              src={'/github-mark.svg'}
-              alt="github-logo"
-              width={100}
-              height={100}
-            />
-            <div>
-              <label>{USERS_NOT_FOUND}</label>
-            </div>
-          </div>
-        )}
-      </div>
+      <div className={clsx('overflow-y-auto h-full', className)}>{table}</div>
       <MyPagination
         pagination={pagination as IPagination}
         setPagination={setPagination}
@@ -144,7 +146,6 @@ const MyTable: FunctionComponent<MyTableProps> = (props) => {
       />
       {showLoader ? <Loader /> : null}
       <Toaster
-        theme={theme as ToasterThemes}
         className={clsx(
           { 'z-0': isFilterOpened },
           { 'delay-500': !isFilterOpened }

@@ -1,25 +1,27 @@
 import { Octokit } from 'octokit';
 import { auth } from './auth';
-import { IUser } from './interface';
+import { IFilter, ISorting, IUser } from './interface';
 
+/**
+ * Получение списка пользователей
+ * @param page Номер страницы
+ * @param filter Фильтр
+ * @param sorting Сортировка: sort - тип, order - порядок
+ * @param accessToken Токен текущего пользователя
+ * @returns Список пользователей
+ */
 export async function fetchFilteredUsers(
   page: number,
-  filter: {
-    login: string;
-    lang: string;
-  },
-  sorting: {
-    sort: string;
-    order: string;
-  },
+  filter: IFilter,
+  sorting: ISorting,
   accessToken: string
 ) {
-  const { login, lang } = filter;
+  const { login, language } = filter;
   const { sort, order } = sorting;
 
   const typeSearch = `type:user`;
   const loginSearch = login ? login + ' in:login' : '';
-  const langSearch = lang ? 'language:' + lang : '';
+  const langSearch = language ? 'language:' + language : '';
 
   const q = [typeSearch, loginSearch, langSearch]
     .filter((item) => item)

@@ -1,11 +1,8 @@
-interface ISelect {
-  value: string;
-  label: string;
-}
+import { ISelect } from '../interface/select';
 
 export const SORTING_ITEMS: ISelect[] = [
   {
-    value: 'match',
+    value: 'best_match',
     label: 'по лучшему совпадению',
   },
   {
@@ -29,5 +26,5 @@ export const ORDER_ITEMS: ISelect[] = [
   },
 ];
 
-export const DEFAULT_SORT: string = SORTING_ITEMS[0].label;
+export const DEFAULT_SORT = SORTING_ITEMS[0];
 export const DEFAULT_ORDER: string = ORDER_ITEMS[0].label;

@@ -1,26 +1,18 @@
-export const FILTER_LABEL = 'Фильтр';
+import { IFilterItem } from '../interface';
 
-type RadioItem = {
-  value: string;
-  label: string;
-  className?: string;
-};
-
-export interface IFilterItem {
-  title: string;
-  type: 'input' | 'radio';
-  stateKey?: string;
-  defaultValue?: string;
-  radioItems?: RadioItem[];
-  placeholder?: string;
-}
+export const FILTER_LABEL = 'Фильтры';
 
 export const FILTER_ITEMS: IFilterItem[] = [
-  { title: 'Имя', type: 'input', stateKey: 'name', placeholder: 'Введите имя' },
+  {
+    title: 'Имя',
+    type: 'input',
+    stateKey: 'login',
+    placeholder: 'Введите имя',
+  },
   {
     title: 'Язык',
     type: 'radio',
-    stateKey: 'lang',
+    stateKey: 'language',
     radioItems: [
       { value: 'all', label: 'Все' },
       { value: 'html', label: 'HTML', className: 'bg-orange-500' },
@@ -32,3 +24,4 @@ export const FILTER_ITEMS: IFilterItem[] = [
 ];
 
 export const CLEAR_BUTTON = 'Очистить';
+export const FILTER_APPLY_DEBOUNCE = 1000;

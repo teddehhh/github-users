@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
+import { IFilter } from '../interface';
 
-interface IObj {
+interface ILocalStorageItem {
   key: string;
   initialValue: Object;
 }
@@ -9,7 +10,14 @@ interface IStoreRecord {
   [key: string]: Object;
 }
 
-function useLocalStorage(...args: IObj[]) {
+// TODO: Поработать над типами аргументов
+
+/**
+ * Создание состояний для полей и их синхронизация с localStorage
+ * @param args Поля для хранения в localStorage
+ * @returns Состояния полей и их управление
+ */
+function useLocalStorage(...args: ILocalStorageItem[]) {
   const [store, setStore] = useState<IStoreRecord>(
     args.reduce((obj, item) => ({ ...obj, [item.key]: item.initialValue }), {})
   );
@@ -18,7 +26,7 @@ function useLocalStorage(...args: IObj[]) {
   const states = Object.keys(store).map((key) => ({
     key,
     state: store[key],
-    setState: (obj: Object | ((prev: Object) => Object)) => {
+    setState: (obj: SetStateAction<Object>) => {
       setStore((prev) => {
         const newStore = { ...prev };
         newStore[key] = typeof obj === 'object' ? obj : obj(store[key]);
@@ -30,7 +38,7 @@ function useLocalStorage(...args: IObj[]) {
     },
   }));
 
-  /** initialize */
+  /** Синхронизация с localStorage */
   useEffect(() => {
     states.map(({ key, state, setState }) => {
       const items = localStorage.getItem(key) || JSON.stringify(state);

@@ -1,87 +1,43 @@
-import { FunctionComponent } from 'react';
+import { Dispatch, FunctionComponent, SetStateAction } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { ChevronRight } from 'lucide-react';
-import { SORT_PREFIX } from '../lib/const/my-table-control';
-import {
-  DEFAULT_ORDER,
-  DEFAULT_SORT,
-  ORDER_ITEMS,
-  SORTING_ITEMS,
-} from '../lib/const/sorting';
+import { Filter as FilterIcon } from 'lucide-react';
+import { FILTER_PREFIX_BUTTON } from '../lib/const/my-table-control';
 import { IFilter, ISorting } from '../lib/interface';
 import Filter from './filter';
+import Sorting from './sorting';
 
 interface MyTableControlProps {
   sorting: ISorting;
   filter: IFilter;
-  setSorting: (_: ISorting | ((prev: ISorting) => ISorting)) => void;
-  setFilter: (_: IFilter | ((prev: IFilter) => IFilter)) => void;
+  setSorting: Dispatch<SetStateAction<ISorting>>;
+  setFilter: Dispatch<SetStateAction<IFilter>>;
   onFilterOpenChange: (open: boolean) => void;
 }
 
 const MyTableControl: FunctionComponent<MyTableControlProps> = (props) => {
   const { sorting, filter, setSorting, setFilter, onFilterOpenChange } = props;
-  const { sort, order } = sorting;
 
   return (
-    <div className="flex flex-row items-center gap-4 px-4 py-2 bg-muted rounded-t-3xl flex-wrap">
+    <div className="flex justify-start items-center gap-4 px-4 py-2 bg-muted rounded-t-3xl flex-wrap max-md:table-control">
       <Sheet onOpenChange={onFilterOpenChange}>
         <SheetTrigger asChild>
-          <Button variant="ghost">
-            <ChevronRight className="h-5 w-5" />
+          <Button className="gap-1" variant="ghost">
+            <FilterIcon width={16} height={16} />
+            {FILTER_PREFIX_BUTTON}
           </Button>
         </SheetTrigger>
         <SheetContent side={'left'}>
           <Filter filter={filter} setFilter={setFilter} />
         </SheetContent>
       </Sheet>
-      <div className="flex flex-row items-center gap-2 flex-wrap">
-        <Label>{SORT_PREFIX}</Label>
-        <Select
-          value={sort}
-          onValueChange={(value) =>
-            setSorting((prev) => ({ ...prev, sort: value }))
-          }
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder={DEFAULT_SORT} />
-          </SelectTrigger>
-          <SelectContent>
-            {SORTING_ITEMS.map(({ value, label }) => (
-              <SelectItem key={`s_${value}`} value={value} className="w-full">
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select
-          value={order}
-          onValueChange={(value) =>
-            setSorting((prev) => ({ ...prev, order: value }))
-          }
-        >
-          <SelectTrigger className="w-[160px]">
-            <SelectValue placeholder={DEFAULT_ORDER} />
-          </SelectTrigger>
-          <SelectContent>
-            {ORDER_ITEMS.map(({ value, label }) => (
-              <SelectItem key={`o_${value}`} value={value} className="w-full">
-                {label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <Sorting
+        sorting={sorting}
+        setSorting={setSorting}
+        onFilterOpenChange={onFilterOpenChange}
+      />
     </div>
   );
 };

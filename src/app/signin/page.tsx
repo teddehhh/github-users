@@ -1,9 +1,10 @@
-import { outfit } from '@/lib/fonts';
+import { jost } from '@/lib/fonts';
 import { Button } from '@/components/ui/button';
 import { FunctionComponent } from 'react';
 import { auth, signIn } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import Image from 'next/image';
+import { GITHUB_AUTHORIZATION_LABEL } from '@/lib/const/sign-in';
+import GitHubButtonIcon from '@/components/github-button-icon';
 
 interface SignInPageProps {}
 
@@ -26,14 +27,9 @@ const SignInPage: FunctionComponent<SignInPageProps> = async () => {
           type="submit"
           className="p-2 flex items-center gap-5 rounded-md px-5"
         >
-          <Image
-            src={'/github-mark.svg'}
-            alt="github-logo"
-            width={22}
-            height={22}
-          />
-          <span className={`${outfit.className} font-medium antialiased`}>
-            Sign in with GitHub
+          <GitHubButtonIcon />
+          <span className={`${jost.className} font-medium antialiased`}>
+            {GITHUB_AUTHORIZATION_LABEL}
           </span>
         </Button>
       </form>

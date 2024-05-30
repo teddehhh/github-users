@@ -1,13 +1,6 @@
-interface ITableHeaders {
-  title: string;
-  field: string;
-  type: 'img' | 'text' | 'boolean';
-  align?: 'left' | 'center' | 'right' | 'justify' | 'char';
-  className?: string;
-  sort?: boolean;
-}
+import { ITableHeader } from '../interface/table-header';
 
-export const TABLE_HEADERS: ITableHeaders[] = [
+export const TABLE_HEADERS: ITableHeader[] = [
   {
     title: '',
     field: 'avatar_url',
@@ -16,8 +9,8 @@ export const TABLE_HEADERS: ITableHeaders[] = [
     className: 'w-[100px]',
   },
   { title: 'Имя', field: 'login', type: 'text' },
-  { title: 'Очки', field: 'score', type: 'text', sort: false },
-  { title: 'Администратор', field: 'site_admin', type: 'boolean', sort: false },
+  { title: 'Очки', field: 'score', type: 'text' },
+  { title: 'Администратор', field: 'site_admin', type: 'boolean' },
 ];
 
 export const KEY_FIELD = 'login';

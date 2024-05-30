@@ -1,1 +1,1 @@
-export const USERS_NOT_FOUND = `Ничего не нашлось :(`;
+export const USERS_NOT_FOUND = `По вашему поиску\nпользователи не найдены`;
