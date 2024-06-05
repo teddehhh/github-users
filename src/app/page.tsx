@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
-import { auth } from '../lib/auth';
-import MyTable from '../components/my-table';
+import { auth } from '../auth/auth';
+import Table from '@/components/table/table';
 
 export default async function Home() {
   const session = await auth();
@@ -9,5 +9,5 @@ export default async function Home() {
     redirect('signin');
   }
 
-  return <MyTable />;
+  return <Table />;
 }

@@ -2,9 +2,9 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { jost } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
-import Header from '../components/header';
+import Header from '../components/header/header';
 import SessionProvider from '../components/providers/session-provider';
-import { auth } from '../lib/auth';
+import { auth } from '../auth/auth';
 import './globals.css';
 
 export const metadata: Metadata = {

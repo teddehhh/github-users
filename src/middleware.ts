@@ -1,4 +1,4 @@
-import { auth } from '@/lib/auth';
+import { auth } from '@/auth/auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 const authMiddleware = auth((req) => {

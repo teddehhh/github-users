@@ -1,14 +1,5 @@
 import { SetStateAction, useEffect, useState } from 'react';
-import { IFilter } from '../interface';
-
-interface ILocalStorageItem {
-  key: string;
-  initialValue: Object;
-}
-
-interface IStoreRecord {
-  [key: string]: Object;
-}
+import { ILocalStorageItem, IStoreRecord } from './types/types';
 
 // TODO: Поработать над типами аргументов
 

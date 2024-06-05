@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Описание проекта
 
-## Getting Started
+GitHub-Users - это веб-приложение для поиска и просмотра пользователей сервиса [GitHub](https://github.com/).
 
-First, run the development server:
+![Главная страница](screenshots/main.png)
+
+Цель - демонстрация получения и развития навыков на практике.
+
+## Страницы
+
+| Путь    | Описание                               |
+| ------- | -------------------------------------- |
+| /       | Главная страница с отображением данных |
+| /signin | Авторизация пользователя               |
+
+## Интерфейс
+
+### Главная страница
+
+![Описание главной страницы](screenshots/describe-main.png)
+
+### Панель с фильтрами
+
+![Описание фильтра](screenshots/describe-filter.png)
+
+### Меню пользователя
+
+![Описание меню пользователя](screenshots/describe-user.png)
+
+### Изменение темы
+
+![Демонстрация изменения темы](screenshots/theme-slider.gif)
+
+## Требования к приложению
+
+### Минимальные:
+
+1. Написать приложение с использованием Next.js.
+2. Приложение должно растягиваться на всю доступную ширину и высоту, если что-то не влезает – показывать скролл. Скролл не на всю страницу, а отдельный скролл для фильтра и отдельный скролл для таблицы. Шапка таблицы с пагинатор не должны скроллиться по вертикали.
+3. В качестве данных использовать [GitHub API](https://docs.github.com/ru/rest/search/search?apiVersion=2022-11-28#search-users).
+4. Фильтры в боковой панели могут быть любыми (минимум должно быть два фильтра). Колонки тоже могут быть любыми.
+5. В момент запроса беккенда должен показываться лоадер который блокирует все нажатия и ввод текста в фильтрах. Лоадер реализовать с помощью HTML и анимировать с помощью CSS.
+6. Должна быть реализована обработка ошибок запроса. Ошибка должна отобразиться в модальном окне.
+7. Если запрос не вернул ничего, то вместо таблицы показать текст посередине «Пользователи не нашлись».
+8. Боковая панель с фильтрами должна уметь сворачиваться и разворачиваться. Эти действия нужно аннимировать.
+9. Сортировка должна быть в шапке столбцов или отдельными элементами управления.
+10. Значения фильтров, пагинацию, сортировку хранить в localStorage. После перезагрузки страницы эти значения не должны теряться.
+11. Стили должны быть реализованы на flexbox или grid.
+12. Классы для DOM элементов должны соответствовать методологии БЭМ, или должны быть реализованы CSS модули, или должен быть использован [Tailwind](https://tailwindcss.com/) или CSS in JS.
+13. Написать минимум один Unit-тест с использованием [Jest](https://jestjs.io/ru/). Написать минимум один тест с использованием [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/).
+
+### Дополнительно:
+
+1. Реализовать темную и светлую тему.
+
+## Приступая к работе
+
+### Cистемные и программные требования:
+
+- macOS, Windows (включая WSL), Linux
+- [Node.js 18.17](https://nodejs.org/en) или позднее
+
+### Запуск
+
+1. Перейдите в директорию проекта
+
+```bash
+cd github-users
+```
+
+2. Установите зависимости с помощью команды:
+
+```bash
+npm install
+# или
+yarn install
+# или
+pnpm install
+# или
+bun install
+```
+
+3. Запустите сервер разработки:
 
 ```bash
 npm run dev
-# or
+# или
 yarn dev
-# or
+# или
 pnpm dev
-# or
+# или
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Откройте в браузере [http://localhost:3000](http://localhost:3000), чтобы увидеть результат.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Технологии
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Приложение было написано с использованием следующих технологий:
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Язык - [TypeScript](https://www.typescriptlang.org/)
+- Фреймворк - [Next.js](https://nextjs.org/docs)
+- CSS - [Tailwind](https://tailwindcss.com/)
+- Авторизация - [Next Auth](https://next-auth.js.org/)
+- UI-компоненты - [shadcn/ui](https://ui.shadcn.com/)
+- Тестирование - [Jest](https://jestjs.io/ru/), [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- Линтинг - [ESLint](https://eslint.org/)

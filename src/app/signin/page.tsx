@@ -1,10 +1,10 @@
 import { jost } from '@/lib/fonts';
 import { Button } from '@/components/ui/button';
 import { FunctionComponent } from 'react';
-import { auth, signIn } from '@/lib/auth';
+import { auth, signIn } from '@/auth/auth';
 import { redirect } from 'next/navigation';
-import { GITHUB_AUTHORIZATION_LABEL } from '@/lib/const/sign-in';
-import GitHubButtonIcon from '@/components/github-button-icon';
+import GitHubButtonIcon from '@/components/sign-in-page/github-button-icon';
+import { GITHUB_AUTHORIZATION_LABEL } from '@/lib/const/sign-in/const';
 
 interface SignInPageProps {}
 
