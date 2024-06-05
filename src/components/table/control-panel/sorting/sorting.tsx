@@ -48,7 +48,7 @@ const Sorting: FunctionComponent<SortingProps> = (props) => {
           setSorting((prev) => ({ ...prev, sort: value }))
         }
       >
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger aria-label='sort-select' className="w-[180px]">
           <SelectValue placeholder={DEFAULT_SORT.label} />
         </SelectTrigger>
         <SelectContent>
@@ -66,7 +66,7 @@ const Sorting: FunctionComponent<SortingProps> = (props) => {
           setSorting((prev) => ({ ...prev, order: value }))
         }
       >
-        <SelectTrigger className="w-[160px]">
+        <SelectTrigger aria-label='sort-select' className="w-[160px]">
           <SelectValue placeholder={DEFAULT_ORDER} />
         </SelectTrigger>
         <SelectContent>
